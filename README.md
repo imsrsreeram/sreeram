@@ -132,3 +132,4 @@ The browser test uses intercepted local build assets and offline demo content; i
 - **Duplicated sections:** a duplicated section keeps its *own* copy of the content. The admin now says so on that section and offers "Use main content instead".
 - **Smoother scrolling:** off-screen sections are skipped until near the viewport, scroll tracking runs once per frame, the cursor glow no longer uses a large blur filter, and the header blur is lighter.
 - **Fonts:** every font now requests only weights Google actually offers (several earlier choices could silently fail to load), with an automatic retry.
+- **Navigation (v3.1):** every menu item is always shown (no "More" menu; links wrap if there are very many). On desktop the Resume Summary, Contact and Download Resume buttons sit in a second row at the right of the bar. The round account icon is now a **Download Resume** button (also in the mobile menu). Page spacing follows the header height automatically.

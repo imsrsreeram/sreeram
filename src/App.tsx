@@ -257,6 +257,28 @@ export default function App() {
     if (url) window.open(url, "_blank", "noopener,noreferrer");
     else alert("A resume has not been uploaded yet.");
   };
+  const downloadResume = async () => {
+    const url = resumeUrl || safeURL(content.resume);
+    if (!url) return alert("A resume has not been uploaded yet.");
+    const name =
+      decodeURIComponent(url.split("?")[0].split("/").pop() || "")
+        .replace(/^\d{10,}-/, "") || "Resume.pdf";
+    try {
+      // Fetch first so the browser saves it instead of just opening it.
+      const r = await fetch(url);
+      if (!r.ok) throw Error();
+      const href = URL.createObjectURL(await r.blob());
+      const a = document.createElement("a");
+      a.href = href;
+      a.download = name;
+      document.body.append(a);
+      a.click();
+      a.remove();
+      setTimeout(() => URL.revokeObjectURL(href), 2000);
+    } catch {
+      window.open(url, "_blank", "noopener,noreferrer");
+    }
+  };
   const contact = () =>
     document
       .getElementById(
@@ -275,6 +297,7 @@ export default function App() {
           activeSection={active}
           onOpenResumeModal={resume}
           onOpenContactModal={contact}
+          onDownloadResume={downloadResume}
         />
         {content.appearance.visitorSwitcher && (
           <button
@@ -292,7 +315,7 @@ export default function App() {
             Light / Dark
           </button>
         )}
-        <main className="pt-20">
+        <main style={{ paddingTop: "var(--header-h, 80px)" }}>
           {ordered(content)
             .filter((s) => s.visible)
             .map((s) => {

@@ -1,17 +1,19 @@
 import { navigationLinks } from "../cms/model";
 import { usePortfolioData } from "../cms/context";
-import React, { useState, useEffect, useRef, useLayoutEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 
 interface HeaderProps {
   activeSection: string;
   onOpenResumeModal: () => void;
   onOpenContactModal: () => void;
+  onDownloadResume: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
   activeSection,
   onOpenResumeModal,
   onOpenContactModal,
+  onDownloadResume,
 }) => {
   const PORTFOLIO_DATA = usePortfolioData();
 
@@ -29,44 +31,27 @@ export const Header: React.FC<HeaderProps> = ({
 
   const navLinks = navigationLinks(window.__CMS_CONTENT);
 
-  // Dynamic navigation can hold any number of items, so fit what the width allows
-  // and move the rest into a "More" menu instead of clipping or wrapping them.
-  const navRef = useRef<HTMLElement>(null);
-  const [fit, setFit] = useState(navLinks.length);
-  const [moreOpen, setMoreOpen] = useState(false);
-  const labelKey = navLinks.map((l) => l.label).join("|");
-  useLayoutEffect(() => {
-    const el = navRef.current;
+  // Every navigation option is always shown. If there are too many for one
+  // line the links wrap onto a second line instead of hiding in a menu.
+  const barRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = barRef.current;
     if (!el) return;
-    const measure = () => {
-      const room = el.clientWidth;
-      if (room === 0) return setFit(navLinks.length); // hidden or no layout (e.g. tests): show all
-      const MORE = 84;
-      const widths = navLinks.map((l) => l.label.length * 7.4 + 30);
-      const total = widths.reduce((a, b) => a + b, 0);
-      if (total <= room) return setFit(navLinks.length);
-      let used = MORE;
-      let n = 0;
-      for (const w of widths) {
-        if (used + w > room) break;
-        used += w;
-        n++;
-      }
-      setFit(Math.max(1, n));
-    };
-    measure();
+    // Page content needs to know how tall the fixed header is.
+    const publish = () =>
+      document.documentElement.style.setProperty(
+        "--header-h",
+        el.offsetHeight + "px",
+      );
+    publish();
     if (typeof ResizeObserver === "undefined") {
-      window.addEventListener("resize", measure);
-      return () => window.removeEventListener("resize", measure);
+      window.addEventListener("resize", publish);
+      return () => window.removeEventListener("resize", publish);
     }
-    const ro = new ResizeObserver(measure);
+    const ro = new ResizeObserver(publish);
     ro.observe(el);
     return () => ro.disconnect();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [labelKey]);
-  const shown = navLinks.slice(0, fit);
-  const hidden = navLinks.slice(fit);
-  const hiddenActive = hidden.some((l) => l.id === activeSection);
+  }, []);
 
   return (
     <header
@@ -76,7 +61,10 @@ export const Header: React.FC<HeaderProps> = ({
           : "bg-surface/85 backdrop-blur-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)] py-0"
       }`}
     >
-      <div className="h-20 max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">
+      <div
+        ref={barRef}
+        className="h-20 xl:h-auto xl:py-2 max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-x-4 gap-y-1 xl:flex-wrap"
+      >
         {/* Brand / Logo */}
         <a
           href="#home"
@@ -109,13 +97,12 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
         </a>
 
-        {/* Desktop Navigation */}
+        {/* Desktop Navigation: all options, right-aligned beside the brand */}
         <nav
-          ref={navRef}
-          className="hidden xl:flex flex-1 min-w-0 items-center justify-center gap-1"
+          className="header-nav hidden xl:flex flex-1 min-w-0 flex-wrap items-center justify-end gap-x-0.5 gap-y-0.5 xl:order-2"
           aria-label="Primary"
         >
-          {shown.map((link) => {
+          {navLinks.map((link) => {
             const isActive = activeSection === link.id;
             return (
               <a
@@ -123,7 +110,7 @@ export const Header: React.FC<HeaderProps> = ({
                 href={link.href}
                 target={link.newTab ? "_blank" : undefined}
                 rel="noopener noreferrer"
-                className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[13px] font-semibold transition-all duration-150 ${
+                className={`whitespace-nowrap px-2.5 py-1.5 rounded-lg text-[13px] font-semibold transition-colors duration-150 ${
                   isActive
                     ? "bg-surface-container-high text-primary font-bold shadow-xs"
                     : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
@@ -133,47 +120,10 @@ export const Header: React.FC<HeaderProps> = ({
               </a>
             );
           })}
-          {hidden.length > 0 && (
-            <div className="relative" onMouseLeave={() => setMoreOpen(false)}>
-              <button
-                type="button"
-                aria-haspopup="true"
-                aria-expanded={moreOpen}
-                onClick={() => setMoreOpen((v) => !v)}
-                className={`whitespace-nowrap px-3 py-1.5 rounded-lg text-[13px] font-semibold ${
-                  hiddenActive
-                    ? "bg-surface-container-high text-primary font-bold"
-                    : "text-on-surface-variant hover:text-on-surface hover:bg-surface-container-low"
-                }`}
-              >
-                More ▾
-              </button>
-              {moreOpen && (
-                <div className="absolute right-0 top-full mt-1 min-w-[200px] rounded-xl border border-surface-container-high bg-surface-container-lowest shadow-xl p-1.5 z-50">
-                  {hidden.map((link) => (
-                    <a
-                      key={link.id}
-                      href={link.href}
-                      target={link.newTab ? "_blank" : undefined}
-                      rel="noopener noreferrer"
-                      onClick={() => setMoreOpen(false)}
-                      className={`block whitespace-nowrap px-3 py-2 rounded-lg text-[13px] font-semibold ${
-                        activeSection === link.id
-                          ? "bg-surface-container-high text-primary"
-                          : "text-on-surface-variant hover:bg-surface-container-low hover:text-on-surface"
-                      }`}
-                    >
-                      {link.label}
-                    </a>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
         </nav>
 
         {/* Right CTA Actions */}
-        <div className="flex items-center gap-1 sm:gap-3 shrink-0">
+        <div className="flex items-center gap-1 sm:gap-3 shrink-0 xl:order-3 xl:basis-full xl:justify-end xl:border-t xl:border-surface-container-high xl:pt-2">
           <button
             onClick={onOpenResumeModal}
             className="hidden md:inline-flex items-center gap-1.5 px-3 py-2 border border-surface-container-highest bg-surface-container-lowest hover:bg-surface-container-high text-on-surface rounded-xl font-label-md text-label-md transition-colors shadow-none text-xs"
@@ -198,17 +148,18 @@ export const Header: React.FC<HeaderProps> = ({
             </span>
           </button>
 
-          <div
-            onClick={onOpenResumeModal}
-            role="button"
-            tabIndex={0}
-            title="Candidate Profile"
-            className="hidden md:flex w-8 h-8 rounded-full bg-primary hover:bg-secondary text-on-primary items-center justify-center shrink-0 cursor-pointer transition-colors shadow-xs"
+          <button
+            type="button"
+            onClick={onDownloadResume}
+            title="Download resume"
+            aria-label="Download resume"
+            className="hidden md:inline-flex items-center justify-center gap-1.5 h-8 min-w-8 px-2 xl:px-3 rounded-full bg-primary hover:bg-secondary text-on-primary shrink-0 transition-colors shadow-xs text-xs font-semibold"
           >
             <span className="material-symbols-outlined text-on-primary text-[18px]">
-              {PORTFOLIO_DATA.copy.Header.text9}
+              download
             </span>
-          </div>
+            <span className="hidden xl:inline">Download Resume</span>
+          </button>
 
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -256,6 +207,18 @@ export const Header: React.FC<HeaderProps> = ({
                 {PORTFOLIO_DATA.copy.Header.text10}
               </span>
               <span>{PORTFOLIO_DATA.copy.Header.text11}</span>
+            </button>
+            <button
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onDownloadResume();
+              }}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-lg border border-surface-container-highest text-sm font-semibold text-primary bg-surface-container-low"
+            >
+              <span className="material-symbols-outlined text-[18px]">
+                download
+              </span>
+              <span>Download Resume</span>
             </button>
             <button
               onClick={() => {

@@ -270,8 +270,7 @@ header {
   color: var(--color-navbar-text);
 }
 header nav {
-  max-width: 52vw;
-  overflow-x: auto;
+  max-width: none;
 }
 header a {
   color: inherit;
@@ -280,7 +279,7 @@ header > div > a {
   font-family: var(--logo-font, Manrope);
 }
 .cms-section {
-  scroll-margin-top: 90px;
+  scroll-margin-top: calc(var(--header-h, 80px) + 12px);
 }
 .cms-generic,
 .cms-section-heading,
@@ -586,7 +585,7 @@ main > .cms-section:not(:first-child) {
   will-change: transform;
 }
 html {
-  scroll-padding-top: 90px;
+  scroll-padding-top: calc(var(--header-h, 80px) + 12px);
 }
 img {
   -webkit-user-drag: none;
