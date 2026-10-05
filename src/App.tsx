@@ -216,14 +216,13 @@ export default function App() {
                         <Component
                           onOpenResumeModal={resume}
                           onOpenContactModal={contact}
+                          {...(s.component === "Hero"
+                            ? {
+                                heroImage: content.profileImage,
+                                hero: content.hero,
+                              }
+                            : {})}
                         />
-                        {s.id === "home" && content.profileImage && (
-                          <img
-                            className="cms-profile-photo"
-                            src={safeURL(content.profileImage)}
-                            alt={content.data.profile.name}
-                          />
-                        )}
                         <div className="cms-extra">
                           <Fields fields={s.fields} />
                           {(s.items || []).length > 0 && (

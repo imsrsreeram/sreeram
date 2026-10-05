@@ -109,7 +109,7 @@ export const AcademicFoundation: React.FC = () => {
                   </button>
                 </div>
 
-                <div className="flex md:flex-col items-start md:items-end justify-between shrink-0 pl-4 border-l border-surface-container-high/70 min-w-[130px]">
+                <div className="flex flex-wrap gap-x-3 gap-y-1 md:flex-nowrap md:flex-col items-start md:items-end justify-between md:shrink-0 pl-4 border-l border-surface-container-high/70 md:min-w-[130px] min-w-0">
                   <span className="font-label-sm text-label-sm text-on-surface-variant uppercase">
                     {item.metricLabel}
                   </span>

@@ -208,8 +208,33 @@ export function seed(): any {
     media: [],
     resume: "",
     profileImage: "",
+    hero: clone(HERO_DEFAULTS),
   };
 }
+/** Settings for the hero picture (content.profileImage) and hero banner. */
+export const HERO_DEFAULTS = {
+  imageAlt: "",
+  imageShape: "circle", // circle | rounded | square
+  imageFocus: "center", // object-position keyword
+  showNodes: true, // keep the interactive focus-area chips beside the picture
+  banner: "",
+  bannerMobile: "", // optional portrait/cropped version for phones
+  bannerAlt: "",
+  bannerOverlay: 75, // 0-90 : how much theme colour washes over the banner
+  bannerFocus: "center",
+};
+export const HERO_FOCUS = [
+  "center",
+  "top",
+  "bottom",
+  "left",
+  "right",
+  "top left",
+  "top right",
+  "bottom left",
+  "bottom right",
+];
+export const HERO_SHAPES = ["circle", "rounded", "square"];
 function merge(a: any, b: any): any {
   if (Array.isArray(a)) return Array.isArray(b) ? b : a;
   if (a && typeof a === "object") {
@@ -367,6 +392,15 @@ export function validate(c: any): string[] {
           !c.sections.some((s: any) => s.id === n.link.slice(1) && s.visible)))
     )
       errors.push("Invalid or hidden navigation target: " + n.label);
+  for (const [label, v] of [
+    ["Hero picture", c.profileImage],
+    ["Hero banner", c.hero?.banner],
+    ["Mobile hero banner", c.hero?.bannerMobile],
+  ] as [string, any][])
+    if (v && !safeURL(v)) errors.push("Invalid image path: " + label);
+  const ov = Number(c.hero?.bannerOverlay ?? 75);
+  if (!(ov >= 0 && ov <= 90))
+    errors.push("Banner overlay must be between 0 and 90.");
   for (const k of themeTokens)
     if (!/^#[0-9a-f]{6}$/i.test(c.appearance.theme.colors[k] || ""))
       errors.push("Invalid HEX colour: " + k);

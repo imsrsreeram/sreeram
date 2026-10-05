@@ -57,6 +57,14 @@ function validate(c) {
       }
     }
   }
+  const okPath = (v) =>
+    !v || (typeof v === "string" && /^(https?:\/\/|(?:\.\/)?media\/)/i.test(v));
+  if (
+    !okPath(c.profileImage) ||
+    !okPath(c.hero?.banner) ||
+    !okPath(c.hero?.bannerMobile)
+  )
+    return "Invalid hero image path.";
   for (const k of TOKENS)
     if (!HEX.test(c.appearance.theme.colors[k] || ""))
       return "Invalid colour: " + k;

@@ -241,6 +241,8 @@
   letter-spacing: normal;
   text-transform: none;
   display: inline-block;
+  max-width: 1em; /* never let an unloaded icon-font ligature widen the layout */
+  overflow: hidden;
   white-space: nowrap;
   word-wrap: normal;
   direction: ltr;

@@ -1,7 +1,7 @@
 {
   "schemaVersion": 2,
   "meta": {
-    "title": "Sreeram S R — MBA Portfolio",
+    "title": "Sreeram S R \u2014 MBA Portfolio",
     "description": "MBA candidate with a foundation in Commerce and practical exposure to Marketing, Digital Marketing, Supply Chain Management, customer research, and business operations. Focused on applying analytical, marketing, and operational capabilities to engineer measurable, high-conviction business outcomes.",
     "keywords": "",
     "canonical": "",
@@ -13,10 +13,10 @@
   "data": {
     "profile": {
       "name": "Sreeram S R",
-      "title": "MBA Candidate • Strategy & Analytics",
-      "headline": "MBA Candidate | Marketing • Digital Strategy • Business Analytics • Supply Chain",
+      "title": "MBA Candidate \u2022 Strategy & Analytics",
+      "headline": "MBA Candidate | Marketing \u2022 Digital Strategy \u2022 Business Analytics \u2022 Supply Chain",
       "bio": "MBA candidate with a foundation in Commerce and practical exposure to Marketing, Digital Marketing, Supply Chain Management, customer research, and business operations. Focused on applying analytical, marketing, and operational capabilities to engineer measurable, high-conviction business outcomes.",
-      "location": "Tamil Nadu, India • Open to Pan-India Relocation",
+      "location": "Tamil Nadu, India \u2022 Open to Pan-India Relocation",
       "email": "sreeram.analytics@consulting.preview",
       "phone": "+91 98400 XXXXX (Available on inquiry)",
       "linkedIn": "https://linkedin.com",
@@ -120,7 +120,7 @@
       },
       {
         "degree": "Bachelor of Commerce (B.Com)",
-        "cohort": "2022 – 2025",
+        "cohort": "2022 \u2013 2025",
         "institution": "Annai Velankanni College",
         "description": "Foundational grounding in Financial Accounting, Corporate Law, Quantitative Commercial Techniques, and Economic Frameworks.",
         "metricLabel": "Graduation Metric",
@@ -325,8 +325,8 @@
     "projects": [
       {
         "id": "royal-enfield",
-        "title": "Customer Satisfaction Study — Royal Enfield",
-        "category": "Automotive • Consumer Sentiment",
+        "title": "Customer Satisfaction Study \u2014 Royal Enfield",
+        "category": "Automotive \u2022 Consumer Sentiment",
         "type": "Primary Field Investigation",
         "summary": "Comprehensive field assessment of premium motorcycle riders across the Marthandam geographic territory, evaluating brand loyalty drivers, service center responsiveness, and after-sales satisfaction friction.",
         "keyMetric": {
@@ -391,8 +391,8 @@
       },
       {
         "id": "mylamparai",
-        "title": "Rural Development Needs Study — Mylamparai",
-        "category": "Community Research • Socio-Economic Study",
+        "title": "Rural Development Needs Study \u2014 Mylamparai",
+        "category": "Community Research \u2022 Socio-Economic Study",
         "type": "Field Immersion",
         "summary": "On-the-ground socio-economic field assessment evaluating civic infrastructure gaps, water accessibility, economic bottlenecks, and grassroots development priorities across the Mylamparai community.",
         "keyMetric": {
@@ -459,8 +459,8 @@
     "experience": {
       "company": "Teejay Prabha Milk and Nutriments Pvt. Ltd.",
       "year": "2026",
-      "role": "Industrial Immersion • Dairy Processing, SCM & Operational Process Review",
-      "sector": "FMCG • Cold Chain Network",
+      "role": "Industrial Immersion \u2022 Dairy Processing, SCM & Operational Process Review",
+      "sector": "FMCG \u2022 Cold Chain Network",
       "summary": "On-site commercial exposure observing manufacturing floor coordination, temperature-controlled supply lines, and real-time inventory velocity.",
       "vectors": [
         {
@@ -495,7 +495,7 @@
           "title": "Supplier Procurement",
           "icon": "agriculture",
           "subtitle": "Direct farm-gate raw milk intake & cold preservation.",
-          "temp": "3.8°C",
+          "temp": "3.8\u00b0C",
           "keyFocus": "Bacterial inhibition & immediate chilling tanks",
           "kpi": "25,000+ Liters daily intake"
         },
@@ -504,7 +504,7 @@
           "title": "Plant Operations",
           "icon": "factory",
           "subtitle": "Quality assays, thermal processing, and automated packaging.",
-          "temp": "72°C (Pasteurization) / 4°C (Storage)",
+          "temp": "72\u00b0C (Pasteurization) / 4\u00b0C (Storage)",
           "keyFocus": "SNF & Fat testing, homogenization, pouch sealing",
           "kpi": "99.8% Batch conformance"
         },
@@ -513,7 +513,7 @@
           "title": "Refrigerated Distribution",
           "icon": "local_shipping",
           "subtitle": "Daily 04:00 AM dispatch fleet to regional dealer depots.",
-          "temp": "2°C - 4°C",
+          "temp": "2\u00b0C - 4\u00b0C",
           "keyFocus": "Reefer vehicle telemetry, multi-drop route optimization",
           "kpi": "98.4% On-time dawn dispatch"
         },
@@ -531,7 +531,7 @@
     "certifications": [
       {
         "title": "Fundamentals of Digital Marketing",
-        "issuer": "NPTEL • Elite Candidate",
+        "issuer": "NPTEL \u2022 Elite Candidate",
         "duration": "8-Week Program",
         "score": "83%",
         "scoreLabel": "Final Composite Score",
@@ -549,7 +549,7 @@
       },
       {
         "title": "SEBI Investor Awareness Test",
-        "issuer": "SEBI • NISM Certified",
+        "issuer": "SEBI \u2022 NISM Certified",
         "duration": "2025 Conferred",
         "score": "Accredited",
         "scoreLabel": "Statutory Regulatory Compliance",
@@ -632,17 +632,17 @@
         "text2": "Academic Foundation",
         "text3": "Progressive grounding combining postgraduate general management acumen with rigorous undergraduate commercial doctrine.",
         "text4": "Scholastic Highlights & Electives:",
-        "text5": "•"
+        "text5": "\u2022"
       },
       "BusinessCapabilities": {
         "text1": "Competency Matrix",
         "text2": "Business Capabilities",
         "text3": "Granular functional competencies structured around commercial execution, analytical instrumentation, and enterprise flow mechanics.",
         "text4": "search",
-        "text5": "✕",
+        "text5": "\u2715",
         "text6": "info",
-        "text7": "Inspect ›",
-        "text8": "✕",
+        "text7": "Inspect \u203a",
+        "text8": "\u2715",
         "text9": "Capability Detail",
         "text10": "Functional Profile",
         "text11": "Practical Application & Academic Mastery",
@@ -654,7 +654,7 @@
         "text2": "Professional Development",
         "text3": "National-level verified credentials validating quantitative market comprehension and regulatory literacy.",
         "text4": "Tested Core Competencies:",
-        "text5": "✓",
+        "text5": "\u2713",
         "text6": "3 Credits",
         "text7": "Recommended Academic Credits",
         "text8": "verified_user"
@@ -662,13 +662,13 @@
       "DualMarquee": {
         "text1": "Strategic Focus",
         "text2": "Areas of Interest",
-        "text3": "•",
-        "text4": "•",
-        "text5": "•",
-        "text6": "•"
+        "text3": "\u2022",
+        "text4": "\u2022",
+        "text5": "\u2022",
+        "text6": "\u2022"
       },
       "ExecutiveContact": {
-        "text1": "Strategic Inquiries • Placement Advisory",
+        "text1": "Strategic Inquiries \u2022 Placement Advisory",
         "text2": "Let's Connect",
         "text3": "Actively seeking forward-leaning roles across Marketing Strategy, Business Analytics, Operations Management, and Enterprise Consulting. Available for executive dialogues and corporate assignments.",
         "text4": "description",
@@ -716,10 +716,10 @@
         "text11": "ACCURACY DELTA",
         "text12": "CYCLE VELOCITY",
         "text13": "24 Hrs",
-        "text14": "Principle A • Signal Clarity",
+        "text14": "Principle A \u2022 Signal Clarity",
         "text15": "Eliminate Anecdotal Decision Gaps",
         "text16": "Replace subjective assumptions with verified customer feedback logs and standardized quantitative key performance indicators.",
-        "text17": "Principle B • Flow Cohesion",
+        "text17": "Principle B \u2022 Flow Cohesion",
         "text18": "End-to-End Operational Alignment",
         "text19": "Ensure sales projections directly feed supply schedules to avoid stockout friction or excess holding carry expenses."
       },
@@ -728,7 +728,7 @@
         "text2": "Connecting customer understanding, business data, and operational thinking.",
         "text3": "Positioned at the intersection of commercial reasoning and quantitative diagnostics to build scalable solutions that withstand operational friction.",
         "text4": "Applied Execution Frameworks:",
-        "text5": "›"
+        "text5": "\u203a"
       },
       "Footer": {
         "text1": "SR",
@@ -740,11 +740,11 @@
         "text7": "Strategic Engagements",
         "text8": "Operational Trajectory",
         "text9": "Certifications & Accreditations",
-        "text10": "View Complete Resume Brief →",
+        "text10": "View Complete Resume Brief \u2192",
         "text11": "Boardroom Contact",
         "text12": "Direct confidential inquiries regarding strategy consulting, operational turnaround, and corporate leadership roles.",
-        "text13": "Initiate Advisory Inquiry →",
-        "text14": "© 2025 Sreeram S R. All rights reserved. Precision Analytical Identity.",
+        "text13": "Initiate Advisory Inquiry \u2192",
+        "text14": "\u00a9 2025 Sreeram S R. All rights reserved. Precision Analytical Identity.",
         "text15": "Confidential Strategic Brief",
         "text16": "arrow_upward"
       },
@@ -754,7 +754,7 @@
         "text3": "Hover over any strategic quadrant below to trace how operational disciplines transfer intelligence into sustainable execution.",
         "text4": "Active Step",
         "text5": "arrow_forward",
-        "text6": "Outputs →",
+        "text6": "Outputs \u2192",
         "text7": "alt_route",
         "text8": "Strategic Synthesis Chain"
       },
@@ -762,7 +762,7 @@
         "text1": "S",
         "text2": "R",
         "text3": "Sreeram S R",
-        "text4": "MBA Candidate • Strategy & Analytics",
+        "text4": "MBA Candidate \u2022 Strategy & Analytics",
         "text5": "description",
         "text6": "Executive Brief",
         "text7": "chat",
@@ -774,10 +774,10 @@
         "text13": "Initiate Advisory Inquiry"
       },
       "Hero": {
-        "text1": "MBA • Marketing • Analytics • Operations",
+        "text1": "MBA \u2022 Marketing \u2022 Analytics \u2022 Operations",
         "text2": "MBA Candidate",
         "text3": "|",
-        "text4": "Marketing • Digital Strategy • Business Analytics • Supply Chain",
+        "text4": "Marketing \u2022 Digital Strategy \u2022 Business Analytics \u2022 Supply Chain",
         "text5": "View Profile",
         "text6": "arrow_downward",
         "text7": "Explore Projects",
@@ -799,7 +799,7 @@
         "text23": "STRATEGY",
         "text24": "Integrated",
         "text25": "Focus",
-        "text26": "✕",
+        "text26": "\u2715",
         "text27": "Explore Portfolio",
         "text28": "keyboard_double_arrow_down"
       },
@@ -807,12 +807,12 @@
         "text1": "Applied Experience",
         "text2": "Industry Exposure",
         "text3": "TP",
-        "text4": "• Core Vector",
+        "text4": "\u2022 Core Vector",
         "text5": "Perishable Supply Chain Pipeline Representation",
-        "text6": "Live Transit Dynamics • Click Stage to Inspect Telemetry",
+        "text6": "Live Transit Dynamics \u2022 Click Stage to Inspect Telemetry",
         "text7": "STAGE",
         "text8": "Click to view telemetry",
-        "text9": "›",
+        "text9": "\u203a",
         "text10": "Stage",
         "text11": "Diagnostic Telemetry:",
         "text12": "Operational Focus:",
@@ -822,13 +822,13 @@
       "ResumeModal": {
         "text1": "description",
         "text2": "Executive Profile Brief & Curriculum Vitae",
-        "text3": "Sreeram S R • MBA Candidate (Class of 2027)",
+        "text3": "Sreeram S R \u2022 MBA Candidate (Class of 2027)",
         "text4": "print",
         "text5": "Print / Save PDF",
-        "text6": "✕",
+        "text6": "\u2715",
         "text7": "SREERAM S R",
-        "text8": "MBA Candidate | Marketing Strategy • Business Analytics • Supply Chain",
-        "text9": "Tamil Nadu, India • Open to Pan-India Relocation •",
+        "text8": "MBA Candidate | Marketing Strategy \u2022 Business Analytics \u2022 Supply Chain",
+        "text9": "Tamil Nadu, India \u2022 Open to Pan-India Relocation \u2022",
         "text10": "Academic Metric",
         "text11": "MBA CGPA 7.5",
         "text12": "NPTEL Elite (83%)",
@@ -841,9 +841,9 @@
         "text19": "Metric:",
         "text20": "Key Output:",
         "text21": "Industry Exposure",
-        "text22": "Analyzed 4-stage dairy supply cold-chain network from rural farmgate milk collection (3.8°C) through plant pasteurization to early morning distribution fleet routing.",
+        "text22": "Analyzed 4-stage dairy supply cold-chain network from rural farmgate milk collection (3.8\u00b0C) through plant pasteurization to early morning distribution fleet routing.",
         "text23": "Professional Certifications",
-        "text24": "Confidential Candidate Brief • Sreeram S R",
+        "text24": "Confidential Candidate Brief \u2022 Sreeram S R",
         "text25": "Close Viewer"
       },
       "SelectedProjects": {
@@ -884,16 +884,16 @@
         "text35": "school",
         "text36": "Community Learning",
         "text37": "Translating ground realities into actionable policy memos.",
-        "text38": "Field Study Location: Mylamparai Region • Rural Community Focus",
+        "text38": "Field Study Location: Mylamparai Region \u2022 Rural Community Focus",
         "text39": "Read Full Field Brief",
         "text40": "arrow_forward",
-        "text41": "✕",
+        "text41": "\u2715",
         "text42": "Field Investigation Brief",
         "text43": "Methodological Workflow Steps",
         "text44": ":",
-        "text45": "—",
+        "text45": "\u2014",
         "text46": "Key Recommendations Submitted",
-        "text47": "›",
+        "text47": "\u203a",
         "text48": "Close Brief"
       }
     },
@@ -1162,27 +1162,27 @@
   "navigation": [],
   "appearance": {
     "theme": {
-      "id": "burgundy-executive",
-      "name": "Burgundy Executive",
+      "id": "stitch-default",
+      "name": "Stitch Original",
       "colors": {
-        "primary": "#4c182b",
-        "secondary": "#853451",
-        "accent": "#ac8246",
+        "primary": "#0e1b32",
+        "secondary": "#2850ce",
+        "accent": "#00966a",
         "secondaryAccent": "#C99A47",
-        "background": "#faf6f4",
+        "background": "#f9f9ff",
         "alternateBackground": "#ECEFF3",
         "surface": "#ffffff",
         "darkBackground": "#101820",
-        "text": "#29202a",
-        "secondaryText": "#29202a",
+        "text": "#171c25",
+        "secondaryText": "#171c25",
         "mutedText": "#667085",
         "border": "#c5c6ce",
-        "navbarBackground": "#faf6f4",
-        "navbarText": "#29202a",
-        "buttonBackground": "#4c182b",
+        "navbarBackground": "#f9f9ff",
+        "navbarText": "#171c25",
+        "buttonBackground": "#0e1b32",
         "buttonText": "#ffffff",
-        "link": "#853451",
-        "highlight": "#ac8246"
+        "link": "#2850ce",
+        "highlight": "#00966a"
       }
     },
     "fonts": {
@@ -1197,7 +1197,7 @@
       "speed": "normal",
       "mobile": true
     },
-    "visitorSwitcher": true,
+    "visitorSwitcher": false,
     "customThemes": []
   },
   "media": [],

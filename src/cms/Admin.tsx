@@ -1,4 +1,5 @@
 import { ValueEditor, CustomFields } from "./Forms";
+import { HeroMedia } from "./HeroMedia";
 import React, { useState, useEffect, useRef } from "react";
 import {
   clone,
@@ -15,6 +16,37 @@ import {
   safeURL,
 } from "./model";
 import "./admin.css";
+
+/** Downscale big camera photos so they fit the 3 MB upload limit and load fast. */
+async function shrinkImage(file: File, maxSide = 2400): Promise<File> {
+  if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
+  const bmp = await createImageBitmap(file);
+  const scale = Math.min(1, maxSide / Math.max(bmp.width, bmp.height));
+  if (scale === 1 && file.size <= 2.5 * 1024 * 1024) {
+    bmp.close();
+    return file;
+  }
+  const canvas = document.createElement("canvas");
+  canvas.width = Math.round(bmp.width * scale);
+  canvas.height = Math.round(bmp.height * scale);
+  canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
+  bmp.close();
+  const type =
+    file.type === "image/png" && file.size < 2.5e6 ? "image/png" : "image/jpeg";
+  for (const q of [0.88, 0.78, 0.68, 0.55]) {
+    const blob: Blob | null = await new Promise((r) =>
+      canvas.toBlob(r, type, q),
+    );
+    if (blob && (blob.size <= 2.8 * 1024 * 1024 || q === 0.55)) {
+      const name = file.name.replace(
+        /\.[^.]+$/,
+        type === "image/png" ? ".png" : ".jpg",
+      );
+      return new File([blob], name, { type });
+    }
+  }
+  return file;
+}
 const BACKUP = "portfolio-cms-draft-v2";
 const names: any = {
   Hero: "profile",
@@ -213,14 +245,19 @@ export default function Admin() {
         "/" +
         path
       : "../" + path;
-  async function upload(file: File) {
+  async function upload(file: File): Promise<string | null> {
     if (demo) {
       setStatus("Uploads require the configured API.");
-      return;
+      return null;
+    }
+    try {
+      file = await shrinkImage(file);
+    } catch {
+      /* fall back to the original file */
     }
     if (file.size > 3 * 1024 * 1024) {
       setStatus("Choose a file smaller than 3 MB.");
-      return;
+      return null;
     }
     if (
       ![
@@ -234,7 +271,7 @@ export default function Admin() {
       setStatus(
         "Use JPG, PNG, WebP, safe SVG or PDF. Only geometric, self-contained SVG assets are accepted.",
       );
-      return;
+      return null;
     }
     setBusy(true);
     try {
@@ -257,9 +294,11 @@ export default function Admin() {
       });
       setMedia((await api("/api/media-list")).files);
       update((d) => d.media.push({ path, name: file.name, type: file.type }));
-      setStatus("Uploaded. Select the file to use it in the draft.");
+      setStatus("Uploaded.");
+      return path;
     } catch (e: any) {
       setStatus(e.message);
+      return null;
     } finally {
       setBusy(false);
     }
@@ -527,6 +566,14 @@ export default function Admin() {
             )}
             {sec && (
               <>
+                {sec.component === "Hero" && (
+                  <HeroMedia
+                    draft={draft}
+                    update={update}
+                    chooseMedia={chooseMedia}
+                    resolve={mediaURL}
+                  />
+                )}
                 <fieldset>
                   <legend>Section Settings</legend>
                   <div className="form-grid">
@@ -686,14 +733,6 @@ export default function Admin() {
                     ))}
                   </>
                 }
-                {sec.component === "Hero" && (
-                  <ValueEditor
-                    label="Profile image"
-                    value={draft.profileImage}
-                    onChange={(v) => update((d) => (d.profileImage = v))}
-                    chooseMedia={chooseMedia}
-                  />
-                )}
               </>
             )}
             {tab === "layout" && (
@@ -1207,8 +1246,17 @@ export default function Admin() {
                 type="file"
                 accept="image/jpeg,image/png,image/webp,image/svg+xml,application/pdf"
                 onChange={(e) => {
-                  const f = e.target.files?.[0];
-                  if (f) upload(f);
+                  const input = e.target;
+                  const f = input.files?.[0];
+                  if (!f) return;
+                  upload(f).then((path) => {
+                    input.value = "";
+                    // Uploading from a picker applies the file straight away.
+                    if (path && pick.current) {
+                      pick.current(path);
+                      setMediaOpen(false);
+                    }
+                  });
                 }}
               />
             </label>

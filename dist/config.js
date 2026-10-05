@@ -1,1 +1,5 @@
-window.SITE_CONFIG = { API_BASE_URL: "", GITHUB_REPO: "", GITHUB_BRANCH: "main" };
+window.SITE_CONFIG = {
+  API_BASE_URL: "https://sreeram-two.vercel.app",
+  GITHUB_REPO: "imsrsreeram/sreeram",
+  GITHUB_BRANCH: "main"
+};
