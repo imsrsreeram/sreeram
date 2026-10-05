@@ -1205,9 +1205,14 @@
       "path": "media/images/1791185455702-Sky-Blue-Creative-Toy-Showcase-2.png",
       "name": "Sky Blue Creative Toy Showcase-2.png",
       "type": "image/png"
+    },
+    {
+      "path": "media/files/1791185520817-Sreeram_Resume-updated.pdf",
+      "name": "Sreeram_Resume updated.pdf",
+      "type": "application/pdf"
     }
   ],
-  "resume": "",
+  "resume": "media/files/1791185520817-Sreeram_Resume-updated.pdf",
   "profileImage": "",
   "hero": {
     "imageAlt": "",
