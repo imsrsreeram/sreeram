@@ -1,0 +1,1 @@
+window.SITE_CONFIG = { API_BASE_URL: "", GITHUB_REPO: "", GITHUB_BRANCH: "main" };

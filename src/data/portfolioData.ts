@@ -1,0 +1,1032 @@
+export interface Capability {
+  id: string;
+  title: string;
+  category: "marketing" | "analytics" | "operations" | "tools";
+  description: string;
+  tags: string[];
+  icon: string;
+  details: string;
+}
+
+export interface EducationItem {
+  degree: string;
+  cohort: string;
+  institution: string;
+  description: string;
+  metricLabel: string;
+  metricValue: string;
+  status: string;
+  statusType: "active" | "conferred" | "completed";
+  highlights: string[];
+}
+
+export interface ProjectItem {
+  id: string;
+  title: string;
+  category: string;
+  type: string;
+  summary: string;
+  keyMetric: {
+    value: string;
+    label: string;
+  };
+  steps: {
+    step: string;
+    title: string;
+    desc: string;
+  }[];
+  insights: {
+    title: string;
+    icon: string;
+    desc: string;
+  }[];
+  detailedFindings: string[];
+  recommendations: string[];
+}
+
+export const DEFAULT_DATA = {
+  profile: {
+    name: "Sreeram S R",
+    title: "MBA Candidate • Strategy & Analytics",
+    headline:
+      "MBA Candidate | Marketing • Digital Strategy • Business Analytics • Supply Chain",
+    bio: "MBA candidate with a foundation in Commerce and practical exposure to Marketing, Digital Marketing, Supply Chain Management, customer research, and business operations. Focused on applying analytical, marketing, and operational capabilities to engineer measurable, high-conviction business outcomes.",
+    location: "Tamil Nadu, India • Open to Pan-India Relocation",
+    email: "sreeram.analytics@consulting.preview",
+    phone: "+91 98400 XXXXX (Available on inquiry)",
+    linkedIn: "https://linkedin.com",
+    metrics: [
+      {
+        value: "83%",
+        label: "NPTEL Elite Score",
+        sub: "Digital Marketing Certified",
+      },
+      { value: "4+", label: "Core Disciplines", sub: "Integrated Strategy" },
+      { value: "2027", label: "Cohort Horizon", sub: "MBA Post-Graduate" },
+    ],
+    pillars: [
+      {
+        id: "01",
+        title: "Marketing & Customer Understanding",
+        icon: "campaign",
+        accentColor: "var(--color-secondary)",
+        description:
+          "Structuring rigorous market sentiment surveys, identifying behavioral friction points, mapping consumer lifecycles, and establishing resonant brand propositions.",
+        tags: [
+          "Brand Positioning",
+          "Consumer Behavior",
+          "Market Sentiment",
+          "Funnel Strategy",
+        ],
+        appliedPoints: [
+          "End-to-end customer journey friction audits and CSAT diagnostics.",
+          "Target audience demographic segmentation and persona mapping.",
+          "Campaign ROI attribution across digital and direct retail distribution channels.",
+        ],
+      },
+      {
+        id: "02",
+        title: "Business & Data Analysis",
+        icon: "monitoring",
+        accentColor: "var(--color-on-tertiary-container)",
+        description:
+          "Translating raw transactional streams into actionable intelligence through Power BI visual architecture, variance tracking, and decision-ready econometric models.",
+        tags: [
+          "Power BI Analytics",
+          "Decision Models",
+          "Quantitative Analysis",
+          "DAX Modeling",
+        ],
+        appliedPoints: [
+          "Interactive dashboard engineering with DAX calculations and data transformation.",
+          "Sales variance modeling and trend forecasting to support executive planning.",
+          "Financial spreadsheet synthesis with dynamic pivot tables and sensitivity tables.",
+        ],
+      },
+      {
+        id: "03",
+        title: "Supply Chain & Operations",
+        icon: "local_shipping",
+        accentColor: "var(--color-secondary-container)",
+        description:
+          "Synthesizing inventory velocity, logistics pathways, procurement constraints, and vendor coordination routines into frictionless throughput frameworks.",
+        tags: [
+          "Process Flow",
+          "Logistics Flow",
+          "Vendor Coordination",
+          "Cold-Chain Routing",
+        ],
+        appliedPoints: [
+          "Perishable supply network modeling with tight temperature and shelf-life constraints.",
+          "Bottleneck reduction via cross-functional workflow swimlane diagnostics.",
+          "Inventory holding minimization and FIFO dispatch scheduling.",
+        ],
+      },
+    ],
+  },
+
+  education: [
+    {
+      degree: "Master of Business Administration (MBA)",
+      cohort: "Class of 2027",
+      institution: "Nehru Institute of Engineering and Technology",
+      description:
+        "Specialized immersion in Marketing Strategy, Digital Ecosystems, Enterprise Analytics, and Global Supply Networks.",
+      metricLabel: "Academic Metric",
+      metricValue: "CGPA 7.5",
+      status: "Active Candidacy",
+      statusType: "active",
+      highlights: [
+        "Advanced electives in Business Analytics, Marketing Management, and Supply Chain Architecture.",
+        "Student leadership in strategic business case analysis and industry interface symposia.",
+        "Applied field studies in automotive brand loyalty and rural socio-economic infrastructure.",
+      ],
+    },
+    {
+      degree: "Bachelor of Commerce (B.Com)",
+      cohort: "2022 – 2025",
+      institution: "Annai Velankanni College",
+      description:
+        "Foundational grounding in Financial Accounting, Corporate Law, Quantitative Commercial Techniques, and Economic Frameworks.",
+      metricLabel: "Graduation Metric",
+      metricValue: "CGPA 6.8",
+      status: "Conferred",
+      statusType: "conferred",
+      highlights: [
+        "Rigorous coursework in Corporate Accounting, Auditing, Commercial Law, and Business Economics.",
+        "Hands-on enterprise accounting workflows in Tally ERP and GST tax ledger compliance.",
+        "Quantitative commercial research projects evaluating local market retail models.",
+      ],
+    },
+    {
+      degree: "Higher Secondary Examination",
+      cohort: "2020",
+      institution: "Commerce & Accountancy Stream",
+      description:
+        "Pre-university distinction in core business mathematics, accountancy, and economics.",
+      metricLabel: "Board Result",
+      metricValue: "82%",
+      status: "First Class",
+      statusType: "completed",
+      highlights: [
+        "Distinction honors in Accountancy, Commerce, and Business Mathematics.",
+        "Elected house representative and analytical competition prize recipient.",
+      ],
+    },
+    {
+      degree: "Secondary School Leaving Certificate (SSLC)",
+      cohort: "2018",
+      institution: "General Secondary Curriculum",
+      description:
+        "Comprehensive foundational scholastic performance across analytical and quantitative curricula.",
+      metricLabel: "Board Result",
+      metricValue: "85%",
+      status: "Distinction",
+      statusType: "completed",
+      highlights: [
+        "Top decile distinction across Mathematics, Science, and Social Sciences.",
+        "Active debater and school quiz team finalist.",
+      ],
+    },
+  ] as EducationItem[],
+
+  capabilities: [
+    {
+      id: "marketing",
+      title: "Marketing",
+      category: "marketing",
+      description:
+        "Commercial positioning, multi-tier brand messaging, consumer touchpoint alignment, and campaign ROI formulation.",
+      tags: ["Strategy", "Outreach", "Positioning"],
+      icon: "storefront",
+      details:
+        "Formulating go-to-market propositions, value positioning statements, competitive differentiation audits, and holistic campaign schedules.",
+    },
+    {
+      id: "digital-marketing",
+      title: "Digital Marketing",
+      category: "marketing",
+      description:
+        "Funnel optimization, organic/paid user acquisition, attribution mapping, and certified web analytics workflows.",
+      tags: ["Growth", "Funnels", "SEO/SEM"],
+      icon: "ads_click",
+      details:
+        "Certified under NPTEL Elite program with deep knowledge of search algorithms, conversion funnels, CAC/LTV balance, and social channel engagement.",
+    },
+    {
+      id: "market-research",
+      title: "Market Research",
+      category: "marketing",
+      description:
+        "Field survey structuring, demographic cohort sampling, qualitative focus probes, and macro competitor profiling.",
+      tags: ["Field", "Cohorts", "Surveys"],
+      icon: "search_insights",
+      details:
+        "End-to-end execution of quantitative questionnaires, stratified sampling, on-site interviews, and demographic sentiment correlation.",
+    },
+    {
+      id: "customer-analysis",
+      title: "Customer Analysis",
+      category: "marketing",
+      description:
+        "CSAT diagnostics, customer journey friction detection, loyalty indices, and post-purchase behavioral sentiment.",
+      tags: ["CSAT", "Journey", "Retention"],
+      icon: "groups",
+      details:
+        "Pinpointing churn drivers, service turnaround friction, and lifetime value drivers through structured empirical feedback gathering.",
+    },
+    {
+      id: "power-bi",
+      title: "Power BI",
+      category: "analytics",
+      description:
+        "Interactive dashboard telemetry, DAX modeling, multi-source ingestion, and automated operational metric reporting.",
+      tags: ["DAX", "BI Visuals", "Dashboards"],
+      icon: "bar_chart",
+      details:
+        "Constructing executive dashboards that aggregate operational and financial metrics, with custom DAX measures, automated refreshes, and drill-throughs.",
+    },
+    {
+      id: "ms-office",
+      title: "Microsoft Office",
+      category: "tools",
+      description:
+        "Advanced Excel financial modeling, dynamic pivot synthesis, executive PowerPoint deck architecture, and macro-readiness.",
+      tags: ["Excel", "Modeling", "PowerPoint"],
+      icon: "table_chart",
+      details:
+        "Complex Excel workbook architecture using INDEX/MATCH, XLOOKUP, nested conditionals, Scenario Manager, and consulting-grade slide layouts.",
+    },
+    {
+      id: "tally",
+      title: "Tally",
+      category: "tools",
+      description:
+        "Enterprise ledger reconciliation, GST compliance workflows, inventory voucher tracking, and commercial balance audits.",
+      tags: ["ERP", "Ledgers", "GST"],
+      icon: "receipt_long",
+      details:
+        "Commercial ledger balancing, inventory tracking vouchers, GST tax filing preparation, and automated trial balance reconciliations.",
+    },
+    {
+      id: "business-data-analysis",
+      title: "Business Data Analysis",
+      category: "analytics",
+      description:
+        "Cross-functional metric variance analysis, trend forecasting, commercial sensitivity modeling, and insight synthesis.",
+      tags: ["Forecasting", "Variance", "Statistics"],
+      icon: "query_stats",
+      details:
+        "Uncovering underlying operational variances, evaluating margin sensitivities, and translating complex numerical series into board-level action steps.",
+    },
+    {
+      id: "supply-chain",
+      title: "Supply Chain Mgmt",
+      category: "operations",
+      description:
+        "Supplier lead-time buffer analysis, warehouse distribution cycles, transit optimization, and inventory cycle counting.",
+      tags: ["Logistics", "Velocity", "Inventory"],
+      icon: "precision_manufacturing",
+      details:
+        "Designing lead-time safety stock buffers, scheduling refrigerated multi-stop transit routes, and managing perishable FIFO stock movements.",
+    },
+    {
+      id: "business-communication",
+      title: "Business Communication",
+      category: "tools",
+      description:
+        "Executive stakeholder management, strategic synthesis memo formulation, cross-departmental coordination, and presentation.",
+      tags: ["Briefs", "Advisory", "Stakeholders"],
+      icon: "record_voice_over",
+      details:
+        "Crafting structured executive memos, translating technical analytical findings into commercial terms, and moderating cross-functional meetings.",
+    },
+    {
+      id: "process-architecture",
+      title: "Process Understanding & Workflow Architecture",
+      category: "operations",
+      description:
+        "Deconstructing institutional operations into end-to-end swimlane diagrams, identifying operational bottlenecks, eliminating friction points, and implementing standard operational SOP checkpoints for enterprise continuity.",
+      tags: ["Optimization", "Governance", "SOPs", "Swimlanes"],
+      icon: "account_tree",
+      details:
+        "Mapping intricate organizational workflows, eliminating redundant administrative handoffs, creating standardized operating procedures, and establishing continuous improvement loops.",
+    },
+  ] as Capability[],
+
+  projects: [
+    {
+      id: "royal-enfield",
+      title: "Customer Satisfaction Study — Royal Enfield",
+      category: "Automotive • Consumer Sentiment",
+      type: "Primary Field Investigation",
+      summary:
+        "Comprehensive field assessment of premium motorcycle riders across the Marthandam geographic territory, evaluating brand loyalty drivers, service center responsiveness, and after-sales satisfaction friction.",
+      keyMetric: {
+        value: "92%",
+        label: "Brand Loyalty Score",
+      },
+      steps: [
+        {
+          step: "STEP 01",
+          title: "Research Design",
+          desc: "Formulated core hypotheses & sample boundaries across Marthandam riders.",
+        },
+        {
+          step: "STEP 02",
+          title: "Customer Survey",
+          desc: "Administered structured Likert-scale questionnaires to 120+ active owners.",
+        },
+        {
+          step: "STEP 03",
+          title: "Feedback Gathering",
+          desc: "Documented qualitative owner service anecdotes and dealer service logs.",
+        },
+        {
+          step: "STEP 04",
+          title: "Statistical Analysis",
+          desc: "Cross-tabulated satisfaction metrics against turnaround times and labor charges.",
+        },
+        {
+          step: "STEP 05",
+          title: "Findings & Report",
+          desc: "Synthesized strategic dealer action plan to compress service bay backlogs.",
+        },
+      ],
+      insights: [
+        {
+          title: "Satisfaction Distribution",
+          icon: "pie_chart",
+          desc: "68% High Delight, 22% Satisfied, 10% Friction across all evaluated cohorts.",
+        },
+        {
+          title: "Primary Pain Point Pinpointed",
+          icon: "build_circle",
+          desc: "Service Center Waiting Time identified as the single critical dissatisfaction variable.",
+        },
+        {
+          title: "Key Deliverable",
+          icon: "verified",
+          desc: "Empirical Final Research Thesis offering operational slot-booking guidelines for regional dealerships.",
+        },
+      ],
+      detailedFindings: [
+        "Brand prestige and ride experience score above 90% positive sentiment among owners aged 20-35.",
+        "Routine service bottleneck: Average wait time of 4.2 hours during weekend check-in surges.",
+        "Spare part availability had an 88% satisfaction rate, while diagnostic clarity scored 76%.",
+      ],
+      recommendations: [
+        "Introduce a digital pre-booking slot system to flatten weekend service bay spikes.",
+        "Implement real-time SMS progress milestones to alleviate customer anxiety during routine maintenance.",
+        "Establish express 60-minute quick-lube bays for periodic 5,000 km oil-and-filter turnarounds.",
+      ],
+    },
+    {
+      id: "mylamparai",
+      title: "Rural Development Needs Study — Mylamparai",
+      category: "Community Research • Socio-Economic Study",
+      type: "Field Immersion",
+      summary:
+        "On-the-ground socio-economic field assessment evaluating civic infrastructure gaps, water accessibility, economic bottlenecks, and grassroots development priorities across the Mylamparai community.",
+      keyMetric: {
+        value: "100%",
+        label: "Grassroots Field Reach",
+      },
+      steps: [
+        {
+          step: "STEP 01",
+          title: "Community Interaction",
+          desc: "Direct village elder & household dialogic interviews across multiple clusters.",
+        },
+        {
+          step: "STEP 02",
+          title: "Needs Identification",
+          desc: "Prioritizing water filtration, transport arteries, and solar lighting needs.",
+        },
+        {
+          step: "STEP 03",
+          title: "Social Issue Analysis",
+          desc: "Correlating livelihood security with seasonal agricultural irrigation deficits.",
+        },
+        {
+          step: "STEP 04",
+          title: "Team Collaboration",
+          desc: "Distributed team data aggregation across zones and verification rounds.",
+        },
+        {
+          step: "STEP 05",
+          title: "Community Learning",
+          desc: "Translating ground realities into actionable policy memos for local panchayats.",
+        },
+      ],
+      insights: [
+        {
+          title: "Critical Need #1",
+          icon: "water_drop",
+          desc: "Clean groundwater purification unit required within a 500m radius of central hamlet.",
+        },
+        {
+          title: "Critical Need #2",
+          icon: "alt_route",
+          desc: "Paved link road connectivity to nearby agricultural wholesale market hubs.",
+        },
+        {
+          title: "Social Capital",
+          icon: "handshake",
+          desc: "Strong self-help group (SHG) mobilization ready to co-manage local micro-credit programs.",
+        },
+      ],
+      detailedFindings: [
+        "100% of surveyed households expressed willingness to maintain community-owned RO water systems.",
+        "Youth vocational training in digital commerce and mechanical trades identified as high-demand levers.",
+        "Primary healthcare outpost operates on limited hours, requiring telemedicine bridge options.",
+      ],
+      recommendations: [
+        "Pilot a community-led water ATM model co-funded by local administrative grants.",
+        "Establish seasonal cold-storage aggregation points for perishable farm produce.",
+        "Organize mobile banking and digital literacy camps for rural women entrepreneurs.",
+      ],
+    },
+  ] as ProjectItem[],
+
+  experience: {
+    company: "Teejay Prabha Milk and Nutriments Pvt. Ltd.",
+    year: "2026",
+    role: "Industrial Immersion • Dairy Processing, SCM & Operational Process Review",
+    sector: "FMCG • Cold Chain Network",
+    summary:
+      "On-site commercial exposure observing manufacturing floor coordination, temperature-controlled supply lines, and real-time inventory velocity.",
+    vectors: [
+      {
+        id: "01",
+        title: "Dairy Operations",
+        desc: "Procurement, bulk pasteurization cycles, hygiene quality checks, and yield batching.",
+      },
+      {
+        id: "02",
+        title: "Supply Chain Flow",
+        desc: "Perishable cold-chain logistics, daily route planning, and distributor replenishment timing.",
+      },
+      {
+        id: "03",
+        title: "FMCG Marketing",
+        desc: "Regional retail visibility, channel trade margins, packaging tiers, and consumer reach.",
+      },
+      {
+        id: "04",
+        title: "Business Operations",
+        desc: "Shift utilization, line waste reduction, inventory rotation (FIFO), and dispatch synchronization.",
+      },
+      {
+        id: "05",
+        title: "Organisational Flow",
+        desc: "Cross-department handoffs between plant supervisors, finance ledgers, and fleet drivers.",
+      },
+    ],
+    stages: [
+      {
+        stage: 1,
+        title: "Supplier Procurement",
+        icon: "agriculture",
+        subtitle: "Direct farm-gate raw milk intake & cold preservation.",
+        temp: "3.8°C",
+        keyFocus: "Bacterial inhibition & immediate chilling tanks",
+        kpi: "25,000+ Liters daily intake",
+      },
+      {
+        stage: 2,
+        title: "Plant Operations",
+        icon: "factory",
+        subtitle:
+          "Quality assays, thermal processing, and automated packaging.",
+        temp: "72°C (Pasteurization) / 4°C (Storage)",
+        keyFocus: "SNF & Fat testing, homogenization, pouch sealing",
+        kpi: "99.8% Batch conformance",
+      },
+      {
+        stage: 3,
+        title: "Refrigerated Distribution",
+        icon: "local_shipping",
+        subtitle: "Daily 04:00 AM dispatch fleet to regional dealer depots.",
+        temp: "2°C - 4°C",
+        keyFocus: "Reefer vehicle telemetry, multi-drop route optimization",
+        kpi: "98.4% On-time dawn dispatch",
+      },
+      {
+        stage: 4,
+        title: "Consumer Touchpoint",
+        icon: "shopping_bag",
+        subtitle:
+          "Retail shelf placement, fresh stock churn, and brand consumption.",
+        temp: "Chilled ambient display",
+        keyFocus:
+          "First-In-First-Out (FIFO) shelf compliance & packaging integrity",
+        kpi: "< 0.5% Return/spoilage rate",
+      },
+    ],
+  },
+
+  certifications: [
+    {
+      title: "Fundamentals of Digital Marketing",
+      issuer: "NPTEL • Elite Candidate",
+      duration: "8-Week Program",
+      score: "83%",
+      scoreLabel: "Final Composite Score",
+      badge: "Elite",
+      academicCredits: "3 Credits Recommended",
+      description:
+        "Rigorous evaluation covering digital consumer psychology, search indexing architecture, social strategy, mobile commerce, and web analytics.",
+      topics: [
+        "Search Engine Optimization (SEO) & Algorithmic Indexing",
+        "Paid Search Advertising & CPC Bidding Architecture",
+        "Social Media Campaign Targeting & User Engagement Metrics",
+        "Web Analytics, Attribution Modeling, & Conversion Funnels",
+        "Digital Consumer Journey Mapping & Retention Strategy",
+      ],
+    },
+    {
+      title: "SEBI Investor Awareness Test",
+      issuer: "SEBI • NISM Certified",
+      duration: "2025 Conferred",
+      score: "Accredited",
+      scoreLabel: "Statutory Regulatory Compliance",
+      badge: "NISM Accredited",
+      academicCredits: "National Certification",
+      description:
+        "Formal credentialing in Indian capital market mechanics, mutual fund allocations, risk mitigation paradigms, statutory equity compliance, and portfolio diversification.",
+      topics: [
+        "Indian Securities Market Infrastructure & Regulatory Framework",
+        "Equities, Mutual Funds, and Fixed-Income Asset Allocation",
+        "Risk-Return Profiles & Portfolio Hedging Fundamentals",
+        "Statutory Grievance Redressal (SCORES) & Investor Protections",
+        "Financial Statement Interpretation for Commercial Investment",
+      ],
+    },
+  ],
+
+  interconnections: {
+    quadrants: [
+      {
+        id: "marketing",
+        title: "1. Marketing",
+        icon: "insights",
+        color: "var(--color-secondary)",
+        summary:
+          "Extracts customer appetite, unmet demographic needs, price tolerances, and brand resonance signals.",
+        output: "Customer Demand Signals",
+        explanation:
+          "Marketing synthesizes raw field feedback and demographic intent, passing high-confidence demand parameters directly into Analytics for volume forecasting.",
+      },
+      {
+        id: "analytics",
+        title: "2. Analytics",
+        icon: "data_object",
+        color: "var(--color-on-tertiary-container)",
+        summary:
+          "Transforms raw customer signals into predictive models, sales forecasts, and inventory requirement vectors.",
+        output: "Quantitative S&OP Plan",
+        explanation:
+          "Analytics converts customer metrics into quantitative schedules via Power BI models, producing exact production quotas for Operational factory floors.",
+      },
+      {
+        id: "operations",
+        title: "3. Operations",
+        icon: "precision_manufacturing",
+        color: "var(--color-secondary-container)",
+        summary:
+          "Schedules plant capacity, synchronizes labor shifts, controls unit costs, and ensures quality compliance.",
+        output: "Finished Batch Volume",
+        explanation:
+          "Operations executes batch throughput with tight variance governance, handing packaged units directly over to Supply Chain fleets.",
+      },
+      {
+        id: "supplychain",
+        title: "4. Supply Chain",
+        icon: "hub",
+        color: "var(--color-on-surface)",
+        summary:
+          "Manages vendor replenishment, warehouse buffers, fleet routes, and on-time shelf availability.",
+        output: "On-Time Customer Delivery",
+        explanation:
+          "Supply Chain orchestrates route logistics and cold-chain timing, completing the commercial circle by delivering quality directly into the consumer's hands.",
+      },
+    ],
+  },
+
+  marqueeTracks: {
+    track1: [
+      "Marketing Strategy",
+      "Digital Marketing",
+      "Business Analytics",
+      "Market Research",
+      "Customer Experience (CX)",
+      "Brand Positioning",
+      "Consumer Insights",
+    ],
+    track2: [
+      "Supply Chain Management",
+      "Business Operations",
+      "Cross-functional Strategy",
+      "Data-driven Decision Making",
+      "Inventory Optimization",
+      "Process Engineering",
+      "Logistics Scheduling",
+    ],
+  },
+};
+
+const editorialCopy = {
+  AcademicFoundation: {
+    text1: "Trajectory",
+    text2: "Academic Foundation",
+    text3:
+      "Progressive grounding combining postgraduate general management acumen with rigorous undergraduate commercial doctrine.",
+    text4: "Scholastic Highlights & Electives:",
+    text5: "•",
+  },
+  BusinessCapabilities: {
+    text1: "Competency Matrix",
+    text2: "Business Capabilities",
+    text3:
+      "Granular functional competencies structured around commercial execution, analytical instrumentation, and enterprise flow mechanics.",
+    text4: "search",
+    text5: "✕",
+    text6: "info",
+    text7: "Inspect ›",
+    text8: "✕",
+    text9: "Capability Detail",
+    text10: "Functional Profile",
+    text11: "Practical Application & Academic Mastery",
+    text12: "Core Methodological Vectors",
+    text13: "Done",
+  },
+  Certifications: {
+    text1: "Accreditations",
+    text2: "Professional Development",
+    text3:
+      "National-level verified credentials validating quantitative market comprehension and regulatory literacy.",
+    text4: "Tested Core Competencies:",
+    text5: "✓",
+    text6: "3 Credits",
+    text7: "Recommended Academic Credits",
+    text8: "verified_user",
+  },
+  DualMarquee: {
+    text1: "Strategic Focus",
+    text2: "Areas of Interest",
+    text3: "•",
+    text4: "•",
+    text5: "•",
+    text6: "•",
+  },
+  ExecutiveContact: {
+    text1: "Strategic Inquiries • Placement Advisory",
+    text2: "Let's Connect",
+    text3:
+      "Actively seeking forward-leaning roles across Marketing Strategy, Business Analytics, Operations Management, and Enterprise Consulting. Available for executive dialogues and corporate assignments.",
+    text4: "description",
+    text5: "View Executive Brief",
+    text6: "contact_page",
+    text7: "Save vCard",
+    text8: "alternate_email",
+    text9: "Advisory Inbox",
+    text10: "call",
+    text11: "Confidential Line",
+    text12: "+91 Direct Inquiry Available via Email / Campus Cell",
+    text13: "pin_drop",
+    text14: "Regional Base",
+    text15: "check_circle",
+    text16: "Advisory Inquiry Dispatched",
+    text17: "Thank you,",
+    text18: ". Your correspondence regarding",
+    text19: "has been logged. Expect executive follow-up within 24 hours.",
+    text20: "Send Another Inquiry",
+    text21: "Direct Communication Channel",
+    text22: "Initiate Strategic Conversation",
+    text23: "Full Name *",
+    text24: "Corporate Email *",
+    text25: "Organization / Firm",
+    text26: "Inquiry Objective",
+    text27: "Corporate Placement / Campus Hiring",
+    text28: "Strategy Advisory / Live Project",
+    text29: "Executive Mentorship / Dialogue",
+    text30: "General Confidential Inquiry",
+    text31: "Brief Message or Proposed Agenda *",
+    text32: "send",
+    text33: "Submit Strategic Inquiry",
+  },
+  ExecutiveDataSection: {
+    text1: "Quantitative Paradigm",
+    text2: "From Information to Business Decisions",
+    text3:
+      "Visualizing the conversion of unstructured operational data streams into executive boardroom clarity.",
+    text4: "Synthetic Throughput Index",
+    text5: "+18.4% Efficiency",
+    text6: "% CI",
+    text7: "(",
+    text8: ")",
+    text9: "SURVEY SAMPLE",
+    text10: "N = 250+",
+    text11: "ACCURACY DELTA",
+    text12: "CYCLE VELOCITY",
+    text13: "24 Hrs",
+    text14: "Principle A • Signal Clarity",
+    text15: "Eliminate Anecdotal Decision Gaps",
+    text16:
+      "Replace subjective assumptions with verified customer feedback logs and standardized quantitative key performance indicators.",
+    text17: "Principle B • Flow Cohesion",
+    text18: "End-to-End Operational Alignment",
+    text19:
+      "Ensure sales projections directly feed supply schedules to avoid stockout friction or excess holding carry expenses.",
+  },
+  ExecutiveProfile: {
+    text1: "Executive Profile",
+    text2:
+      "Connecting customer understanding, business data, and operational thinking.",
+    text3:
+      "Positioned at the intersection of commercial reasoning and quantitative diagnostics to build scalable solutions that withstand operational friction.",
+    text4: "Applied Execution Frameworks:",
+    text5: "›",
+  },
+  Footer: {
+    text1: "SR",
+    text2: "Sreeram S R",
+    text3:
+      "Executive-tier Institutional Portfolio. Specializing in Marketing Strategy, Digital Transformation, Business Analytics, and Supply Chain Architecture.",
+    text4: "Available for Strategic Leadership & Placement",
+    text5: "Executive Portfolios",
+    text6: "Capabilities Matrix",
+    text7: "Strategic Engagements",
+    text8: "Operational Trajectory",
+    text9: "Certifications & Accreditations",
+    text10: "View Complete Resume Brief →",
+    text11: "Boardroom Contact",
+    text12:
+      "Direct confidential inquiries regarding strategy consulting, operational turnaround, and corporate leadership roles.",
+    text13: "Initiate Advisory Inquiry →",
+    text14:
+      "© 2025 Sreeram S R. All rights reserved. Precision Analytical Identity.",
+    text15: "Confidential Strategic Brief",
+    text16: "arrow_upward",
+  },
+  FunctionalInterconnections: {
+    text1: "Cross-Functional Integration",
+    text2: "Where Business Functions Connect",
+    text3:
+      "Hover over any strategic quadrant below to trace how operational disciplines transfer intelligence into sustainable execution.",
+    text4: "Active Step",
+    text5: "arrow_forward",
+    text6: "Outputs →",
+    text7: "alt_route",
+    text8: "Strategic Synthesis Chain",
+  },
+  Header: {
+    text1: "S",
+    text2: "R",
+    text3: "Sreeram S R",
+    text4: "MBA Candidate • Strategy & Analytics",
+    text5: "description",
+    text6: "Executive Brief",
+    text7: "chat",
+    text8: "Start a Conversation",
+    text9: "person",
+    text10: "description",
+    text11: "View Executive Brief",
+    text12: "send",
+    text13: "Initiate Advisory Inquiry",
+  },
+  Hero: {
+    text1: "MBA • Marketing • Analytics • Operations",
+    text2: "MBA Candidate",
+    text3: "|",
+    text4: "Marketing • Digital Strategy • Business Analytics • Supply Chain",
+    text5: "View Profile",
+    text6: "arrow_downward",
+    text7: "Explore Projects",
+    text8: "analytics",
+    text9: "article",
+    text10: "Executive Brief",
+    text11: "share",
+    text12: "Connect on LinkedIn",
+    text13: "83%",
+    text14: "NPTEL Elite Score",
+    text15: "Digital Marketing Certified",
+    text16: "4+",
+    text17: "Core Disciplines",
+    text18: "Integrated Strategy",
+    text19: "2027",
+    text20: "Cohort Horizon",
+    text21: "MBA Post-Graduate",
+    text22: "hub",
+    text23: "STRATEGY",
+    text24: "Integrated",
+    text25: "Focus",
+    text26: "✕",
+    text27: "Explore Portfolio",
+    text28: "keyboard_double_arrow_down",
+  },
+  IndustryExposure: {
+    text1: "Applied Experience",
+    text2: "Industry Exposure",
+    text3: "TP",
+    text4: "• Core Vector",
+    text5: "Perishable Supply Chain Pipeline Representation",
+    text6: "Live Transit Dynamics • Click Stage to Inspect Telemetry",
+    text7: "STAGE",
+    text8: "Click to view telemetry",
+    text9: "›",
+    text10: "Stage",
+    text11: "Diagnostic Telemetry:",
+    text12: "Operational Focus:",
+    text13: "TARGET TEMP",
+    text14: "THROUGHPUT KPI",
+  },
+  ResumeModal: {
+    text1: "description",
+    text2: "Executive Profile Brief & Curriculum Vitae",
+    text3: "Sreeram S R • MBA Candidate (Class of 2027)",
+    text4: "print",
+    text5: "Print / Save PDF",
+    text6: "✕",
+    text7: "SREERAM S R",
+    text8:
+      "MBA Candidate | Marketing Strategy • Business Analytics • Supply Chain",
+    text9: "Tamil Nadu, India • Open to Pan-India Relocation •",
+    text10: "Academic Metric",
+    text11: "MBA CGPA 7.5",
+    text12: "NPTEL Elite (83%)",
+    text13: "Executive Summary",
+    text14: "Strategic & Technical Competencies",
+    text15: "Education & Scholastic Credentials",
+    text16: "(",
+    text17: ")",
+    text18: "Field Research & Applied Projects",
+    text19: "Metric:",
+    text20: "Key Output:",
+    text21: "Industry Exposure",
+    text22:
+      "Analyzed 4-stage dairy supply cold-chain network from rural farmgate milk collection (3.8°C) through plant pasteurization to early morning distribution fleet routing.",
+    text23: "Professional Certifications",
+    text24: "Confidential Candidate Brief • Sreeram S R",
+    text25: "Close Viewer",
+  },
+  SelectedProjects: {
+    text1: "Case Investigations",
+    text2: "Selected Research & Projects",
+    text3:
+      "Empirical field studies combining primary data collection, demographic sampling, statistical synthesis, and strategic recommendations.",
+    text4: "Methodological Progression",
+    text5: "Empirical Findings",
+    text6: "Dealer Recommendations",
+    text7: "Field Investigation Steps",
+    text8: "Survey Metric Insights",
+    text9: "Strategic Action Memos",
+    text10: "Action Vector 0",
+    text11: "Satisfaction Distribution",
+    text12: "68% High Delight",
+    text13: "22% Satisfied",
+    text14: "10% Friction",
+    text15: "Primary Pain Point Pinpointed",
+    text16: "build_circle",
+    text17: "Service Center Waiting Time",
+    text18: "Critical variable driving post-purchase dissatisfaction.",
+    text19: "Key Deliverable",
+    text20: "verified",
+    text21: "Empirical Final Research Thesis",
+    text22: "Actionable operational guidelines for regional dealerships.",
+    text23: "forum",
+    text24: "Community Interaction",
+    text25: "Direct village elder & household dialogic interviews.",
+    text26: "checklist",
+    text27: "Needs Identification",
+    text28: "Prioritizing water filtration & transport arteries.",
+    text29: "analytics",
+    text30: "Social Issue Analysis",
+    text31: "Correlating livelihood security with civic infrastructure.",
+    text32: "groups",
+    text33: "Team Collaboration",
+    text34: "Distributed team data aggregation across zones.",
+    text35: "school",
+    text36: "Community Learning",
+    text37: "Translating ground realities into actionable policy memos.",
+    text38: "Field Study Location: Mylamparai Region • Rural Community Focus",
+    text39: "Read Full Field Brief",
+    text40: "arrow_forward",
+    text41: "✕",
+    text42: "Field Investigation Brief",
+    text43: "Methodological Workflow Steps",
+    text44: ":",
+    text45: "—",
+    text46: "Key Recommendations Submitted",
+    text47: "›",
+    text48: "Close Brief",
+  },
+};
+const componentDetails = {
+  AcademicFoundation: {},
+  BusinessCapabilities: {},
+  Certifications: {},
+  DualMarquee: {},
+  ExecutiveContact: {},
+  ExecutiveDataSection: {
+    milestones: [
+      {
+        id: 1,
+        cx: 150,
+        cy: 80,
+        label: "Q1 Baseline",
+        val: "+4.2% Delta",
+        desc: "Initial market sentiment ingestion",
+      },
+      {
+        id: 2,
+        cx: 300,
+        cy: 95,
+        label: "Q2 Optimization",
+        val: "+8.9% Delta",
+        desc: "Inventory buffer stabilization",
+      },
+      {
+        id: 3,
+        cx: 450,
+        cy: 40,
+        label: "Q3 S&OP Alignment",
+        val: "+14.1% Delta",
+        desc: "Cross-functional sales & ops cadence",
+      },
+      {
+        id: 4,
+        cx: 600,
+        cy: 20,
+        label: "Q4 Run-Rate",
+        val: "+18.4% Peak",
+        desc: "Predictive throughput synchronization",
+      },
+    ],
+  },
+  ExecutiveProfile: {},
+  Footer: {},
+  FunctionalInterconnections: {},
+  Header: {},
+  Hero: {
+    nodes: [
+      {
+        id: "marketing",
+        label: "Marketing",
+        color: "bg-secondary",
+        tagColor: "text-secondary",
+        position: "top-6 left-1/2 -translate-x-1/2",
+        detail:
+          "Brand positioning, commercial campaign schedules, and consumer segmentation.",
+      },
+      {
+        id: "analytics",
+        label: "Analytics",
+        color: "bg-on-tertiary-container",
+        tagColor: "text-on-tertiary-container",
+        position: "top-[32%] right-4",
+        detail:
+          "Power BI visualizations, predictive DAX models, and quantitative variance tracking.",
+      },
+      {
+        id: "customer",
+        label: "Customer",
+        color: "bg-secondary-container",
+        tagColor: "text-secondary-container",
+        position: "bottom-12 right-12",
+        detail:
+          "Field CSAT diagnostics, journey friction reduction, and loyalty driver mapping.",
+      },
+      {
+        id: "operations",
+        label: "Operations",
+        color: "bg-on-surface-variant",
+        tagColor: "text-on-surface-variant",
+        position: "bottom-12 left-12",
+        detail:
+          "Manufacturing throughput, shift synchronization, and SOP quality controls.",
+      },
+      {
+        id: "supplychain",
+        label: "Supply Chain",
+        color: "bg-secondary",
+        tagColor: "text-secondary",
+        position: "top-[32%] left-4",
+        detail:
+          "Perishable cold-chain logistics, lead-time buffers, and route dispatch schedules.",
+      },
+    ],
+  },
+  IndustryExposure: {},
+  ResumeModal: {},
+  SelectedProjects: {},
+};
+export let PORTFOLIO_DATA: any = {
+  ...DEFAULT_DATA,
+  copy: editorialCopy,
+  componentDetails,
+};
+export function setPortfolioData(data: any) {
+  PORTFOLIO_DATA = data;
+}
