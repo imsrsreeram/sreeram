@@ -43,6 +43,59 @@ export default function App() {
   const preview = new URLSearchParams(location.search).has("preview");
   useEffect(() => {
     let receivedPreview = false;
+    let bakedJSON = "";
+    let liveTimer = 0;
+    let stopped = false;
+    // Published edits are committed to GitHub, but the static site only
+    // rebuilds a few minutes later. To make edits show up right away, the page
+    // also reads the newest published JSON straight from the repository and
+    // swaps it in when it differs from the copy baked into this build.
+    const cfg = (window as any).SITE_CONFIG || {};
+    const rawBase = /^[\w.-]+\/[\w.-]+$/.test(cfg.GITHUB_REPO || "")
+      ? `https://raw.githubusercontent.com/${cfg.GITHUB_REPO}/${cfg.GITHUB_BRANCH || "main"}/`
+      : "";
+    const liveMedia = (v: any): any =>
+      typeof v === "string"
+        ? /^(\.\/)?media\/images\//i.test(v)
+          ? rawBase + v.replace(/^\.\//, "")
+          : v
+        : Array.isArray(v)
+          ? v.map(liveMedia)
+          : v && typeof v === "object"
+            ? Object.fromEntries(
+                Object.entries(v).map(([k, x]) => [k, liveMedia(x)]),
+              )
+            : v;
+    const refreshLive = async () => {
+      if (!rawBase || stopped || receivedPreview) return;
+      try {
+        const r = await fetch(
+          rawBase + "content/site-content.json?t=" + Date.now(),
+          { cache: "no-store" },
+        );
+        if (!r.ok) return;
+        const fresh = normalize(await r.json());
+        if (stopped || receivedPreview) return;
+        if (JSON.stringify(fresh) === bakedJSON) return;
+        const live = liveMedia(fresh);
+        selectedTheme.current = clone(live.appearance.theme);
+        setContent((cur: any) =>
+          JSON.stringify(cur) === JSON.stringify(live) ? cur : live,
+        );
+      } catch {
+        /* offline or private repository: keep the built-in copy */
+      }
+    };
+    const onVisible = () => {
+      if (document.visibilityState === "visible") refreshLive();
+    };
+    function startLive() {
+      refreshLive();
+      document.addEventListener("visibilitychange", onVisible);
+      liveTimer = window.setInterval(() => {
+        if (document.visibilityState === "visible") refreshLive();
+      }, 60000);
+    }
     fetch("./content/site-content.json?v=" + Date.now(), { cache: "no-store" })
       .then((r) => {
         if (!r.ok) throw Error("Unable to load portfolio content.");
@@ -50,8 +103,10 @@ export default function App() {
       })
       .then((c) => {
         if (receivedPreview) return;
+        bakedJSON = JSON.stringify(normalize(c));
         selectedTheme.current = clone(normalize(c).appearance.theme);
         setContent(normalize(c));
+        if (!preview) startLive();
       })
       .catch((e) => {
         if (!receivedPreview) setError(e.message);
@@ -75,7 +130,12 @@ export default function App() {
       window.opener.postMessage({ type: "cms-preview-ready" }, location.origin);
     if (preview && window.parent !== window)
       window.parent.postMessage({ type: "cms-preview-ready" }, location.origin);
-    return () => window.removeEventListener("message", receive);
+    return () => {
+      stopped = true;
+      window.clearInterval(liveTimer);
+      document.removeEventListener("visibilitychange", onVisible);
+      window.removeEventListener("message", receive);
+    };
   }, []);
   useEffect(() => {
     if (!content) return;

@@ -52,6 +52,148 @@ const sectionDefs = [
   ["interests", "Areas of Interest", "DualMarquee"],
   ["contact", "Contact", "ExecutiveContact"],
 ];
+
+export type FontOption = {
+  name: string;
+  group: "Sans-serif" | "Serif" | "Display" | "Script" | "Monospace" | "System";
+  /** Google Fonts family spec; omitted for system fonts */
+  google?: string;
+};
+export const FONT_OPTIONS: FontOption[] = [
+  ...[
+    "Inter",
+    "Manrope",
+    "Poppins",
+    "Montserrat",
+    "DM Sans",
+    "Plus Jakarta Sans",
+    "Outfit",
+    "Sora",
+    "Lexend",
+    "Work Sans",
+    "Nunito",
+    "Raleway",
+    "Open Sans",
+    "Roboto",
+    "Source Sans 3",
+    "IBM Plex Sans",
+    "Space Grotesk",
+    "Urbanist",
+    "Figtree",
+    "Barlow",
+    "Josefin Sans",
+    "Rubik",
+    "Mulish",
+    "Karla",
+  ].map((name) => ({
+    name,
+    group: "Sans-serif" as const,
+    google: name.replace(/ /g, "+") + ":wght@400;500;600;700;800",
+  })),
+  ...[
+    "Playfair Display",
+    "Merriweather",
+    "Lora",
+    "Cormorant Garamond",
+    "DM Serif Display",
+    "Libre Baskerville",
+    "Fraunces",
+    "Crimson Pro",
+    "EB Garamond",
+    "Bitter",
+    "Noto Serif",
+  ].map((name) => ({
+    name,
+    group: "Serif" as const,
+    google: name.replace(/ /g, "+") + ":wght@400;500;600;700",
+  })),
+  ...[
+    "Bebas Neue",
+    "Anton",
+    "Oswald",
+    "Archivo Black",
+    "Abril Fatface",
+    "Big Shoulders Display",
+    "League Spartan",
+    "Syne",
+    "Unbounded",
+  ].map((name) => ({
+    name,
+    group: "Display" as const,
+    google:
+      name.replace(/ /g, "+") +
+      (/Bebas|Anton|Archivo Black|Abril/.test(name)
+        ? ""
+        : ":wght@400;500;600;700"),
+  })),
+  ...[
+    "Great Vibes",
+    "Dancing Script",
+    "Allura",
+    "Pacifico",
+    "Satisfy",
+    "Caveat",
+    "Sacramento",
+    "Mr Dafoe",
+  ].map((name) => ({
+    name,
+    group: "Script" as const,
+    google:
+      name.replace(/ /g, "+") +
+      (/Dancing|Caveat/.test(name) ? ":wght@400;600;700" : ""),
+  })),
+  ...["JetBrains Mono", "Space Mono", "Fira Code", "IBM Plex Mono"].map(
+    (name) => ({
+      name,
+      group: "Monospace" as const,
+      google: name.replace(/ /g, "+") + ":wght@400;500;600",
+    }),
+  ),
+  ...[
+    "Arial",
+    "Verdana",
+    "Trebuchet MS",
+    "Tahoma",
+    "Georgia",
+    "Times New Roman",
+    "Palatino Linotype",
+    "Courier New",
+  ].map((name) => ({ name, group: "System" as const })),
+];
+const FONT_FALLBACK: Record<string, string> = {
+  "Sans-serif": "sans-serif",
+  Serif: "serif",
+  Display: "sans-serif",
+  Script: "cursive",
+  Monospace: "monospace",
+  System: "sans-serif",
+};
+/** CSS font-family value (quoted, with a generic fallback). */
+export function fontStack(name: string): string {
+  const f = FONT_OPTIONS.find((x) => x.name === name);
+  const generic = f ? FONT_FALLBACK[f.group] : "sans-serif";
+  const fb =
+    f?.group === "System" && /Georgia|Times|Palatino/.test(name)
+      ? "serif"
+      : f?.group === "System" && /Courier/.test(name)
+        ? "monospace"
+        : generic;
+  return `"${String(name).replace(/["\\;{}<>]/g, "")}", ${fb}`;
+}
+/** Loads a Google font on demand (only the fonts actually selected are downloaded). */
+export function ensureFont(name: string) {
+  if (typeof document === "undefined") return;
+  const f = FONT_OPTIONS.find((x) => x.name === name);
+  if (!f?.google) return;
+  const id = "gf-" + f.google.split(":")[0];
+  if (document.getElementById(id)) return;
+  const l = document.createElement("link");
+  l.id = id;
+  l.rel = "stylesheet";
+  l.href =
+    "https://fonts.googleapis.com/css2?family=" + f.google + "&display=swap";
+  document.head.append(l);
+}
 export const themeTokens = [
   "primary",
   "secondary",
@@ -80,6 +222,7 @@ const palette = (
   text: string,
   surface = "#ffffff",
   dark = "#101820",
+  extra: Record<string, string> = {},
 ) => ({
   primary,
   secondary,
@@ -99,7 +242,28 @@ const palette = (
   buttonText: "#ffffff",
   link: secondary,
   highlight: accent,
+  ...extra,
 });
+/** Dark preset helper: supplies tuned neutrals instead of the default navy ones. */
+const dk = (
+  primary: string,
+  secondary: string,
+  accent: string,
+  bg: string,
+  text: string,
+  surface: string,
+  alt: string,
+  border: string,
+  muted: string,
+  dark: string,
+) =>
+  palette(primary, secondary, accent, bg, text, surface, dark, {
+    alternateBackground: alt,
+    border,
+    mutedText: muted,
+    buttonBackground: primary,
+    buttonText: bg,
+  });
 export const presets: any[] = [
   {
     id: "stitch-default",
@@ -148,6 +312,154 @@ export const presets: any[] = [
     id: "light-minimal",
     name: "Light Minimal",
     colors: palette("#25334a", "#476ae8", "#3a8d7f", "#ffffff", "#202b3d"),
+  },
+  // ---- more light themes ----
+  {
+    id: "ocean-teal",
+    name: "Ocean Teal",
+    colors: palette("#0b3c49", "#0e7f8e", "#b4660b", "#f2fafb", "#10272e"),
+  },
+  {
+    id: "royal-purple",
+    name: "Royal Purple",
+    colors: palette("#2e1a5e", "#6d3fd1", "#0b8a78", "#f8f6ff", "#1d1530"),
+  },
+  {
+    id: "sunset-coral",
+    name: "Sunset Coral",
+    colors: palette("#3b1d2a", "#d9482f", "#b7701a", "#fff8f3", "#2a1a1a"),
+  },
+  {
+    id: "rose-quartz",
+    name: "Rose Quartz",
+    colors: palette("#4a2433", "#bf3b64", "#8f6428", "#fff7f9", "#2d1a22"),
+  },
+  {
+    id: "forest-sand",
+    name: "Forest & Sand",
+    colors: palette("#1f3a2a", "#3f7035", "#a9780b", "#f6f4ea", "#1d2a20"),
+  },
+  {
+    id: "sky-light",
+    name: "Sky Light",
+    colors: palette("#12395e", "#1b74c4", "#0b8a66", "#f1f8ff", "#12263a"),
+  },
+  {
+    id: "lavender-mist",
+    name: "Lavender Mist",
+    colors: palette("#3d2f6b", "#7254d0", "#b23a72", "#faf8ff", "#221a3a"),
+  },
+  {
+    id: "espresso-cream",
+    name: "Espresso & Cream",
+    colors: palette("#3b2a20", "#8c5a3c", "#9d6a1e", "#faf6f1", "#2a1f19"),
+  },
+  {
+    id: "saffron-slate",
+    name: "Saffron & Slate",
+    colors: palette("#2b2a33", "#c4620a", "#2a7a68", "#fffaf1", "#25222b"),
+  },
+  {
+    id: "mono-ink",
+    name: "Mono Ink",
+    colors: palette("#111111", "#3f3f46", "#a14c07", "#f5f5f4", "#111111"),
+  },
+  // ---- dark themes ----
+  {
+    id: "crimson-noir",
+    name: "Crimson Noir",
+    colors: dk(
+      "#f5eeee",
+      "#ff3b47",
+      "#ff8a8a",
+      "#0b0708",
+      "#f5eeee",
+      "#171011",
+      "#1c1213",
+      "#3a2326",
+      "#b9a5a7",
+      "#050303",
+    ),
+  },
+  {
+    id: "midnight-gold",
+    name: "Midnight Gold",
+    colors: dk(
+      "#f5e6c0",
+      "#e0b04a",
+      "#7dd3b0",
+      "#0c1018",
+      "#eef0f5",
+      "#151b27",
+      "#1b2333",
+      "#34405a",
+      "#aab3c5",
+      "#070a10",
+    ),
+  },
+  {
+    id: "indigo-dusk",
+    name: "Indigo Dusk",
+    colors: dk(
+      "#e4e7ff",
+      "#8b9bff",
+      "#5eead4",
+      "#0f1226",
+      "#eceefe",
+      "#181c3a",
+      "#1f2447",
+      "#3a4180",
+      "#aeb4e0",
+      "#0a0c1c",
+    ),
+  },
+  {
+    id: "neon-cyber",
+    name: "Neon Cyber",
+    colors: dk(
+      "#e8fff9",
+      "#22d3ee",
+      "#a3e635",
+      "#06121a",
+      "#e6f7fb",
+      "#0d1f2b",
+      "#12293a",
+      "#1f4358",
+      "#9ac3d1",
+      "#030a10",
+    ),
+  },
+  {
+    id: "forest-night",
+    name: "Forest Night",
+    colors: dk(
+      "#e6f4ea",
+      "#4ade80",
+      "#facc15",
+      "#0a1410",
+      "#e8f3ec",
+      "#12211a",
+      "#182c22",
+      "#2c4a3a",
+      "#a3bfae",
+      "#060d0a",
+    ),
+  },
+  {
+    id: "plum-night",
+    name: "Plum Night",
+    colors: dk(
+      "#f6e8f7",
+      "#e879f9",
+      "#fbbf77",
+      "#150b19",
+      "#f4e9f6",
+      "#21122a",
+      "#2a1836",
+      "#4e2d63",
+      "#c3a8cb",
+      "#0c0610",
+    ),
   },
 ];
 export function seed(): any {
@@ -214,7 +526,8 @@ export function seed(): any {
 /** Settings for the hero picture (content.profileImage) and hero banner. */
 export const HERO_DEFAULTS = {
   imageAlt: "",
-  imageShape: "circle", // circle | rounded | square
+  layout: "classic", // classic | poster (banner-led, large cut-out photo)
+  imageShape: "circle", // circle | rounded | square | cutout
   imageFocus: "center", // object-position keyword
   showNodes: true, // keep the interactive focus-area chips beside the picture
   banner: "",
@@ -234,7 +547,8 @@ export const HERO_FOCUS = [
   "bottom left",
   "bottom right",
 ];
-export const HERO_SHAPES = ["circle", "rounded", "square"];
+export const HERO_SHAPES = ["circle", "rounded", "square", "cutout"];
+export const HERO_LAYOUTS = ["classic", "poster"];
 function merge(a: any, b: any): any {
   if (Array.isArray(a)) return Array.isArray(b) ? b : a;
   if (a && typeof a === "object") {
@@ -473,9 +787,10 @@ export function applyTheme(c: any) {
     "surface-tint": t.primary,
   };
   for (const k in map) set(k, map[k]);
-  r.setProperty("--heading-font", c.appearance.fonts.heading);
-  r.setProperty("--body-font", c.appearance.fonts.body);
-  r.setProperty("--logo-font", c.appearance.fonts.logo);
+  for (const k of ["heading", "body", "logo"] as const) {
+    ensureFont(c.appearance.fonts[k]);
+    r.setProperty("--" + k + "-font", fontStack(c.appearance.fonts[k]));
+  }
   document.documentElement.dataset.motion = c.appearance.animations.enabled
     ? "on"
     : "off";

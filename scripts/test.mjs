@@ -2,6 +2,8 @@ import assert from "node:assert/strict";
 import { createRequire } from "node:module";
 import fs from "node:fs";
 import {
+  fontStack,
+  FONT_OPTIONS,
   seed,
   normalize,
   validate,
@@ -173,3 +175,14 @@ assert.equal(
   "",
 );
 console.log("PASS: media signatures and restricted SVG validation.");
+
+// Themes and fonts
+assert(presets.length >= 24, "expected the extended theme library");
+assert.equal(new Set(presets.map((p) => p.id)).size, presets.length);
+assert.equal(fontStack("Source Sans 3"), '"Source Sans 3", sans-serif');
+assert.equal(fontStack("Georgia"), '"Georgia", serif');
+assert(FONT_OPTIONS.length >= 50);
+assert.equal(
+  new Set(FONT_OPTIONS.map((f) => f.name)).size,
+  FONT_OPTIONS.length,
+);

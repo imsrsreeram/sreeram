@@ -68,7 +68,10 @@ await act(async () => {
   root.render(React.createElement(App));
   await new Promise((r) => setTimeout(r, 10));
 });
-assert.equal(document.querySelectorAll(".cms-section").length, 11);
+assert.equal(
+  document.querySelectorAll(".cms-section").length,
+  content.sections.filter((s) => s.visible).length,
+);
 assert(document.body.textContent.includes("Sreeram S R"));
 assert.equal(
   new Set([...document.querySelectorAll("[id]")].map((el) => el.id)).size,
@@ -143,7 +146,7 @@ let saved = JSON.parse(localStorage.getItem("portfolio-cms-draft-v2"));
 assert.equal(saved.sections.at(-1).fields.length, 1);
 await act(async () => button("Duplicate Section").click());
 saved = JSON.parse(localStorage.getItem("portfolio-cms-draft-v2"));
-assert.equal(saved.sections.length, 13);
+assert.equal(saved.sections.length, content.sections.length + 2);
 assert.notEqual(saved.sections.at(-1).id, saved.sections.at(-2).id);
 await act(async () => button("Theme Manager").click());
 const card = [...document.querySelectorAll(".theme-card")].find((el) =>

@@ -9,6 +9,9 @@ import {
   types,
   fieldTypes,
   presets,
+  FONT_OPTIONS,
+  fontStack,
+  ensureFont,
   themeTokens,
   contrast,
   validate,
@@ -17,12 +20,17 @@ import {
 } from "./model";
 import "./admin.css";
 
-/** Downscale big camera photos so they fit the 3 MB upload limit and load fast. */
-async function shrinkImage(file: File, maxSide = 2400): Promise<File> {
+/**
+ * Optimises uploaded photos: resizes to at most 2000 px and re-encodes as WebP
+ * (keeps transparency, typically 5-10x smaller than PNG) so pages load fast
+ * and the file fits the 3 MB limit. Falls back to the original when the
+ * browser cannot encode WebP or the result would not be smaller.
+ */
+async function shrinkImage(file: File, maxSide = 2000): Promise<File> {
   if (!/^image\/(jpeg|png|webp)$/.test(file.type)) return file;
   const bmp = await createImageBitmap(file);
   const scale = Math.min(1, maxSide / Math.max(bmp.width, bmp.height));
-  if (scale === 1 && file.size <= 2.5 * 1024 * 1024) {
+  if (scale === 1 && file.size <= 300 * 1024) {
     bmp.close();
     return file;
   }
@@ -31,18 +39,16 @@ async function shrinkImage(file: File, maxSide = 2400): Promise<File> {
   canvas.height = Math.round(bmp.height * scale);
   canvas.getContext("2d")!.drawImage(bmp, 0, 0, canvas.width, canvas.height);
   bmp.close();
-  const type =
-    file.type === "image/png" && file.size < 2.5e6 ? "image/png" : "image/jpeg";
-  for (const q of [0.88, 0.78, 0.68, 0.55]) {
+  for (const q of [0.84, 0.74, 0.62]) {
     const blob: Blob | null = await new Promise((r) =>
-      canvas.toBlob(r, type, q),
+      canvas.toBlob(r, "image/webp", q),
     );
-    if (blob && (blob.size <= 2.8 * 1024 * 1024 || q === 0.55)) {
-      const name = file.name.replace(
-        /\.[^.]+$/,
-        type === "image/png" ? ".png" : ".jpg",
-      );
-      return new File([blob], name, { type });
+    if (!blob || blob.type !== "image/webp") break; // no WebP encoder
+    if (blob.size <= 1.5 * 1024 * 1024 || q === 0.62) {
+      if (blob.size >= file.size && file.size <= 2.8 * 1024 * 1024) return file;
+      return new File([blob], file.name.replace(/\.[^.]+$/, ".webp"), {
+        type: "image/webp",
+      });
     }
   }
   return file;
@@ -74,6 +80,7 @@ export default function Admin() {
     [tab, setTab] = useState("dashboard"),
     [media, setMedia] = useState<any[]>([]),
     [mediaOpen, setMediaOpen] = useState(false),
+    [browseFonts, setBrowseFonts] = useState(false),
     [busy, setBusy] = useState(false),
     [showPreview, setShowPreview] = useState(false),
     [snapshot, setSnapshot] = useState(""),
@@ -219,7 +226,7 @@ export default function Admin() {
       setSnapshot(JSON.stringify(draft));
       localStorage.removeItem(BACKUP);
       setStatus(
-        "Published. GitHub Pages will update after its deployment completes.",
+        "Published. Visitors see the change within about a minute; the full site rebuild finishes in a few minutes.",
       );
     } catch (e: any) {
       setStatus(e.message);
@@ -1086,40 +1093,92 @@ export default function Admin() {
             {tab === "fonts" && (
               <>
                 <p>
-                  Font choices are independent of themes. System fonts work
-                  offline; Manrope and Inter use the existing font imports.
+                  Pick a font for each role. Fonts are independent of themes and
+                  download only when selected, so the site stays fast. System
+                  fonts work offline.
                 </p>
-                {["heading", "body", "logo"].map((k) => (
-                  <label key={k}>
-                    {pretty(k)} font
-                    <select
-                      value={draft.appearance.fonts[k]}
-                      onChange={(e) =>
-                        update((d) => (d.appearance.fonts[k] = e.target.value))
-                      }
-                    >
-                      {[
-                        "Manrope",
-                        "Inter",
-                        "Arial",
-                        "Georgia",
-                        "Verdana",
-                        "Trebuchet MS",
-                        "Times New Roman",
-                      ].map((f) => (
-                        <option key={f}>{f}</option>
-                      ))}
-                    </select>
-                    <p
-                      style={{
-                        fontFamily: draft.appearance.fonts[k],
-                        fontSize: 26,
-                      }}
-                    >
-                      A clear professional identity.
-                    </p>
-                  </label>
-                ))}
+                {["heading", "body", "logo"].map((k) => {
+                  ensureFont(draft.appearance.fonts[k]);
+                  return (
+                    <label key={k}>
+                      {pretty(k)} font
+                      <select
+                        value={draft.appearance.fonts[k]}
+                        onChange={(e) => {
+                          ensureFont(e.target.value);
+                          update(
+                            (d) => (d.appearance.fonts[k] = e.target.value),
+                          );
+                        }}
+                      >
+                        {[...new Set(FONT_OPTIONS.map((f) => f.group))].map(
+                          (g) => (
+                            <optgroup key={g} label={g}>
+                              {FONT_OPTIONS.filter((f) => f.group === g).map(
+                                (f) => (
+                                  <option key={f.name}>{f.name}</option>
+                                ),
+                              )}
+                            </optgroup>
+                          ),
+                        )}
+                        {!FONT_OPTIONS.some(
+                          (f) => f.name === draft.appearance.fonts[k],
+                        ) && <option>{draft.appearance.fonts[k]}</option>}
+                      </select>
+                      <p
+                        style={{
+                          fontFamily: fontStack(draft.appearance.fonts[k]),
+                          fontSize: 26,
+                        }}
+                      >
+                        A clear professional identity.
+                      </p>
+                    </label>
+                  );
+                })}
+                <details
+                  onToggle={(e) =>
+                    setBrowseFonts((e.currentTarget as HTMLDetailsElement).open)
+                  }
+                >
+                  <summary>Browse all fonts</summary>
+                  <div className="font-grid">
+                    {(browseFonts ? FONT_OPTIONS : []).map((f) => {
+                      ensureFont(f.name);
+                      return (
+                        <article key={f.name}>
+                          <strong style={{ fontFamily: fontStack(f.name) }}>
+                            {f.name}
+                          </strong>
+                          <span style={{ fontFamily: fontStack(f.name) }}>
+                            Strategy, Analytics, 2027
+                          </span>
+                          <div className="font-apply">
+                            {["heading", "body", "logo"].map((k) => (
+                              <button
+                                type="button"
+                                key={k}
+                                className={
+                                  draft.appearance.fonts[k] === f.name
+                                    ? "on"
+                                    : ""
+                                }
+                                onClick={() =>
+                                  update(
+                                    (d) => (d.appearance.fonts[k] = f.name),
+                                  )
+                                }
+                              >
+                                {pretty(k)}
+                              </button>
+                            ))}
+                          </div>
+                        </article>
+                      );
+                    })}
+                  </div>
+                </details>
               </>
             )}
             {tab === "animations" && (

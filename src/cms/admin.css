@@ -498,3 +498,42 @@ p {
     max-width: 220px;
   }
 }
+
+.font-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.font-grid article {
+  border: 1px solid #d5dae3;
+  border-radius: 10px;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+}
+.font-grid strong {
+  font-size: 18px;
+}
+.font-grid span {
+  font-size: 13px;
+  color: #667085;
+}
+.font-apply {
+  display: flex;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin-top: 6px;
+}
+.font-apply button {
+  min-height: 34px;
+  padding: 4px 10px;
+  font-size: 12px;
+}
+.font-apply button.on {
+  background: #2850ce;
+  color: #fff;
+  border-color: #2850ce;
+}

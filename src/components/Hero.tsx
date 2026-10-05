@@ -1,5 +1,5 @@
 import { safeURL, HERO_DEFAULTS } from "../cms/model";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { usePortfolioData } from "../cms/context";
 
 interface HeroProps {
@@ -29,26 +29,84 @@ export const Hero: React.FC<HeroProps> = ({
   const banner = safeURL(opts.banner);
   const bannerMobile = safeURL(opts.bannerMobile);
   const overlay = Math.min(90, Math.max(0, Number(opts.bannerOverlay) || 0));
-  const showNodeChips = !photo || opts.showNodes !== false;
+  const overlayLeft = Math.min(92, overlay + 15);
+  const showNodeChips = opts.showNodes !== false;
   const [photoFailed, setPhotoFailed] = useState(false);
   const [bannerFailed, setBannerFailed] = useState(false);
   useEffect(() => setPhotoFailed(false), [photo]);
   useEffect(() => setBannerFailed(false), [banner, bannerMobile]);
   const hasPhoto = !!photo && !photoFailed;
+  const poster = hasPhoto && opts.layout === "poster";
+  const cutout = opts.imageShape === "cutout";
   const hasBanner = !!(banner || bannerMobile) && !bannerFailed;
 
   const [activeNode, setActiveNode] = useState<string | null>(null);
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-
+  // The cursor halo follows the pointer without re-rendering React (smooth),
+  // and is skipped on touch devices where it would only cost battery.
+  const haloRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches)
+      return;
+    let raf = 0;
+    let x = 0;
+    let y = 0;
+    const apply = () => {
+      raf = 0;
+      if (haloRef.current)
+        haloRef.current.style.transform = `translate3d(${x}px, ${y}px, 0)`;
     };
-    window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    const onMove = (e: MouseEvent) => {
+      x = e.clientX;
+      y = e.clientY;
+      if (!raf) raf = requestAnimationFrame(apply);
+    };
+    window.addEventListener("mousemove", onMove, { passive: true });
+    return () => {
+      window.removeEventListener("mousemove", onMove);
+      if (raf) cancelAnimationFrame(raf);
+    };
   }, []);
 
   const nodes = PORTFOLIO_DATA.componentDetails.Hero.nodes;
+
+  const chipsBlock = (
+    <div className="flex w-full max-w-[480px] flex-col items-center gap-space-sm">
+      <div className="flex flex-wrap justify-center gap-2">
+        {nodes.map((node) => {
+          const isSelected = activeNode === node.id;
+          return (
+            <button
+              key={node.id}
+              type="button"
+              aria-pressed={isSelected}
+              onClick={() => setActiveNode(isSelected ? null : node.id)}
+              className={`px-3 py-2 min-h-9 rounded-lg shadow-sm transition-all duration-200 flex items-center gap-1.5 border border-surface-container-high ${
+                isSelected
+                  ? "bg-primary text-on-primary ring-2 ring-secondary"
+                  : "bg-surface-container-lowest text-on-surface hover:bg-primary hover:text-on-primary"
+              }`}
+            >
+              <span className={`w-2 h-2 rounded-full ${node.color}`} />
+              <span className="font-label-sm text-label-sm uppercase font-semibold">
+                {node.label}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      {activeNode && (
+        <div className="w-full rounded-xl border border-secondary/30 bg-surface-container-lowest/95 p-3 text-center shadow-md backdrop-blur-md">
+          <span className="font-label-sm text-[11px] font-bold text-secondary uppercase tracking-wider">
+            {nodes.find((n) => n.id === activeNode)?.label}{" "}
+            {PORTFOLIO_DATA.copy.Hero.text25}
+          </span>
+          <p className="font-body-sm text-[12px] text-on-surface-variant">
+            {nodes.find((n) => n.id === activeNode)?.detail}
+          </p>
+        </div>
+      )}
+    </div>
+  );
 
   return (
     <div className="relative w-full">
@@ -58,17 +116,16 @@ export const Hero: React.FC<HeroProps> = ({
         data-ambient="true"
       >
         <div
-          className="absolute w-[500px] h-[500px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-tr from-secondary/15 via-on-tertiary-container/10 to-transparent blur-3xl transition-transform duration-100 ease-out will-change-transform"
-          style={{
-            transform: `translate3d(${mousePos.x}px, ${mousePos.y}px, 0)`,
-          }}
+          ref={haloRef}
+          className="absolute left-0 top-0 hidden [@media(hover:hover)_and_(pointer:fine)]:block w-[500px] h-[500px] -ml-[250px] -mt-[250px] rounded-full bg-gradient-to-tr from-secondary/15 via-on-tertiary-container/10 to-transparent blur-3xl will-change-transform"
+          style={{ transform: "translate3d(-999px,-999px,0)" }}
           data-cursor-halo="true"
         />
       </div>
 
       {/* SECTION 1: HERO VIEWPORT */}
       <section
-        className="relative z-10 w-full overflow-hidden pb-space-xl pt-space-lg"
+        className={`relative z-10 w-full overflow-hidden pt-space-lg ${poster ? "pb-0" : "pb-space-xl"}`}
         data-hero-banner={hasBanner ? "true" : undefined}
       >
         {hasBanner && (
@@ -93,18 +150,30 @@ export const Hero: React.FC<HeroProps> = ({
             </picture>
             {/* Theme-coloured wash keeps the text readable on any photo, light or dark theme */}
             <div
-              className="absolute inset-0"
+              className={`absolute inset-0 ${poster ? "lg:hidden" : ""}`}
               style={{
                 background: `color-mix(in srgb, var(--color-surface) ${overlay}%, transparent)`,
               }}
             />
+            {poster && (
+              <div
+                className="absolute inset-0 hidden lg:block"
+                style={{
+                  background: `linear-gradient(90deg, color-mix(in srgb, var(--color-surface) ${overlayLeft}%, transparent) 0%, color-mix(in srgb, var(--color-surface) ${overlayLeft}%, transparent) 40%, color-mix(in srgb, var(--color-surface) ${Math.max(overlay - 45, 8)}%, transparent) 100%)`,
+                }}
+              />
+            )}
             <div className="absolute inset-x-0 bottom-0 h-24 bg-gradient-to-t from-[var(--color-surface)] to-transparent" />
           </div>
         )}
         <div className="max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8">
           <div
             className={`grid grid-cols-1 lg:grid-cols-12 gap-space-lg lg:gap-space-xl items-center ${
-              hasPhoto ? "lg:min-h-[778px]" : "min-h-[680px] lg:min-h-[778px]"
+              poster
+                ? "lg:min-h-[700px]"
+                : hasPhoto
+                  ? "lg:min-h-[778px]"
+                  : "min-h-[680px] lg:min-h-[778px]"
             }`}
           >
             {/* Left Analysis Column */}
@@ -117,7 +186,13 @@ export const Hero: React.FC<HeroProps> = ({
               </div>
 
               <div className="flex flex-col gap-space-xs">
-                <h1 className="font-display-lg text-display-lg text-primary tracking-tight break-words">
+                <h1
+                  className={
+                    poster
+                      ? "font-display-lg text-primary tracking-tight break-words uppercase font-extrabold leading-[0.95] text-[clamp(2.6rem,9vw,6rem)]"
+                      : "font-display-lg text-display-lg text-primary tracking-tight break-words"
+                  }
+                >
                   {PORTFOLIO_DATA.profile.name}
                 </h1>
                 <p className="font-headline-md text-headline-md text-on-surface-variant font-semibold">
@@ -132,6 +207,12 @@ export const Hero: React.FC<HeroProps> = ({
               <p className="font-body-lg text-body-lg text-on-surface-variant max-w-2xl leading-relaxed">
                 {PORTFOLIO_DATA.profile.bio}
               </p>
+
+              {poster && showNodeChips && (
+                <div className="max-w-2xl [&>div>div:first-child]:justify-start">
+                  {chipsBlock}
+                </div>
+              )}
 
               {/* Core Call to Actions */}
               <div className="flex flex-wrap items-center gap-space-sm pt-space-sm [&>a]:min-h-11 [&>button]:min-h-11">
@@ -221,71 +302,63 @@ export const Hero: React.FC<HeroProps> = ({
             {/* Right Abstract Interconnected Strategic Node System */}
             <div
               className={`lg:col-span-5 relative flex items-center justify-center min-w-0 ${
-                hasPhoto ? "order-first lg:order-last" : ""
+                poster
+                  ? "order-last self-end justify-center lg:justify-end"
+                  : hasPhoto
+                    ? "order-first lg:order-last"
+                    : ""
               }`}
             >
-              {hasPhoto && (
+              {hasPhoto && poster && (
+                <figure
+                  className="flex w-full justify-center lg:justify-end"
+                  data-testid="hero-photo"
+                >
+                  <img
+                    src={photo}
+                    alt={opts.imageAlt || PORTFOLIO_DATA.profile.name}
+                    className="block h-[340px] sm:h-[460px] lg:h-[640px] w-auto max-w-full object-contain object-bottom drop-shadow-[0_20px_40px_rgba(0,0,0,0.35)]"
+                    style={{
+                      objectPosition: `${opts.imageFocus === "center" ? "bottom" : opts.imageFocus}`,
+                    }}
+                    decoding="async"
+                    fetchPriority="high"
+                    onError={() => setPhotoFailed(true)}
+                  />
+                </figure>
+              )}
+              {hasPhoto && !poster && (
                 <figure
                   className="flex w-full flex-col items-center gap-space-md"
                   data-testid="hero-photo"
                 >
-                  <div
-                    className={`relative w-full max-w-[240px] sm:max-w-[300px] md:max-w-[340px] lg:max-w-[420px] aspect-square overflow-hidden border-4 border-surface-container-lowest bg-surface-container-low shadow-xl ring-1 ring-surface-container-highest ${
-                      SHAPE[opts.imageShape] || SHAPE.circle
-                    }`}
-                  >
+                  {cutout ? (
                     <img
                       src={photo}
                       alt={opts.imageAlt || PORTFOLIO_DATA.profile.name}
-                      className="h-full w-full object-cover"
-                      style={{ objectPosition: opts.imageFocus }}
+                      className="block w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[440px] max-h-[460px] lg:max-h-[560px] h-auto object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.3)]"
                       decoding="async"
                       fetchPriority="high"
                       onError={() => setPhotoFailed(true)}
                     />
-                  </div>
-                  {showNodeChips && (
-                    <div className="flex w-full max-w-[480px] flex-col items-center gap-space-sm">
-                      <div className="flex flex-wrap justify-center gap-2">
-                        {nodes.map((node) => {
-                          const isSelected = activeNode === node.id;
-                          return (
-                            <button
-                              key={node.id}
-                              type="button"
-                              aria-pressed={isSelected}
-                              onClick={() =>
-                                setActiveNode(isSelected ? null : node.id)
-                              }
-                              className={`px-3 py-2 min-h-9 rounded-lg shadow-sm transition-all duration-200 flex items-center gap-1.5 border border-surface-container-high ${
-                                isSelected
-                                  ? "bg-primary text-on-primary ring-2 ring-secondary"
-                                  : "bg-surface-container-lowest text-on-surface hover:bg-primary hover:text-on-primary"
-                              }`}
-                            >
-                              <span
-                                className={`w-2 h-2 rounded-full ${node.color}`}
-                              />
-                              <span className="font-label-sm text-label-sm uppercase font-semibold">
-                                {node.label}
-                              </span>
-                            </button>
-                          );
-                        })}
-                      </div>
-                      {activeNode && (
-                        <div className="w-full rounded-xl border border-secondary/30 bg-surface-container-lowest/95 p-3 text-center shadow-md backdrop-blur-md">
-                          <span className="font-label-sm text-[11px] font-bold text-secondary uppercase tracking-wider">
-                            {nodes.find((n) => n.id === activeNode)?.label}{" "}
-                            {PORTFOLIO_DATA.copy.Hero.text25}
-                          </span>
-                          <p className="font-body-sm text-[12px] text-on-surface-variant">
-                            {nodes.find((n) => n.id === activeNode)?.detail}
-                          </p>
-                        </div>
-                      )}
+                  ) : (
+                    <div
+                      className={`relative w-full max-w-[240px] sm:max-w-[300px] md:max-w-[340px] lg:max-w-[420px] aspect-square overflow-hidden border-4 border-surface-container-lowest bg-surface-container-low shadow-xl ring-1 ring-surface-container-highest ${
+                        SHAPE[opts.imageShape] || SHAPE.circle
+                      }`}
+                    >
+                      <img
+                        src={photo}
+                        alt={opts.imageAlt || PORTFOLIO_DATA.profile.name}
+                        className="h-full w-full object-cover"
+                        style={{ objectPosition: opts.imageFocus }}
+                        decoding="async"
+                        fetchPriority="high"
+                        onError={() => setPhotoFailed(true)}
+                      />
                     </div>
                   )}
+                  {showNodeChips && chipsBlock}
                 </figure>
               )}
               {!hasPhoto && (
@@ -452,7 +525,9 @@ export const Hero: React.FC<HeroProps> = ({
           </div>
 
           {/* Minimal Scroll Anchor Indicator */}
-          <div className="flex flex-col items-center justify-center pt-space-lg">
+          <div
+            className={`flex-col items-center justify-center pt-space-lg ${poster ? "hidden" : "flex"}`}
+          >
             <a
               className="group flex flex-col items-center gap-1 text-on-surface-variant hover:text-secondary transition-colors"
               href={safeURL(PORTFOLIO_DATA.profile.ctaLinks.profile)}

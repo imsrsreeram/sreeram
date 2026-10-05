@@ -115,3 +115,12 @@ npm run test:browser
 ```
 
 The browser test uses intercepted local build assets and offline demo content; it does not publish to GitHub. Passing it still does not verify the deployed API.
+
+
+## Update notes
+
+- **Live updates:** after you press Publish, visitors see the new content within about a minute. The page reads the newest `content/site-content.json` (and newly uploaded images) straight from the repository and the normal GitHub Pages rebuild catches up afterwards.
+- **Tests no longer depend on your content,** so adding sections in the admin can't make the deployment workflow fail.
+- **Hero:** picture, banner, optional mobile banner, `classic` or `poster` layout, `cutout` shape for transparent PNG/WebP photos.
+- **Uploads** are resized to 2000 px and converted to WebP automatically.
+- **Themes:** 24 presets (light and dark). **Fonts:** about 55 families; Google fonts download only when selected.

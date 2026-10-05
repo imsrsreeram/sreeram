@@ -1,5 +1,11 @@
 import React from "react";
-import { HERO_FOCUS, HERO_SHAPES, HERO_DEFAULTS, safeURL } from "./model";
+import {
+  HERO_FOCUS,
+  HERO_SHAPES,
+  HERO_LAYOUTS,
+  HERO_DEFAULTS,
+  safeURL,
+} from "./model";
 
 type Choose = (cb: (v: string) => void) => void;
 
@@ -105,6 +111,25 @@ export function HeroMedia({
         />
       </div>
       <div className="hero-options">
+        <label>
+          Hero layout
+          <select
+            value={hero.layout}
+            onChange={(e) => setHero({ layout: e.target.value })}
+          >
+            {HERO_LAYOUTS.map((s) => (
+              <option key={s} value={s}>
+                {s === "poster"
+                  ? "poster — big name, banner behind, cut-out photo at the edge"
+                  : "classic — text left, picture right"}
+              </option>
+            ))}
+          </select>
+          <small>
+            For the poster look use a PNG/WebP with a transparent background and
+            set the shape to “cutout”.
+          </small>
+        </label>
         <label>
           Picture alt text (for screen readers)
           <input
