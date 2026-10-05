@@ -1200,7 +1200,13 @@
     "visitorSwitcher": true,
     "customThemes": []
   },
-  "media": [],
+  "media": [
+    {
+      "path": "media/images/1791185455702-Sky-Blue-Creative-Toy-Showcase-2.png",
+      "name": "Sky Blue Creative Toy Showcase-2.png",
+      "type": "image/png"
+    }
+  ],
   "resume": "",
   "profileImage": "",
   "hero": {
@@ -1208,7 +1214,7 @@
     "imageShape": "circle",
     "imageFocus": "center",
     "showNodes": true,
-    "banner": "",
+    "banner": "media/images/1791185455702-Sky-Blue-Creative-Toy-Showcase-2.png",
     "bannerMobile": "",
     "bannerAlt": "",
     "bannerOverlay": 75,
