@@ -255,6 +255,7 @@ body {
 }
 [class*="font-headline"],
 [class*="font-display"],
+[class*="font-stat"],
 h1,
 h2,
 h3 {
@@ -572,4 +573,21 @@ html[data-speed="slow"] .animate-marquee-reverse {
 }
 html[data-theme-dark="true"] .text-primary {
   color: var(--color-on-surface);
+}
+
+/* ---- smoothness ---- */
+/* Sections below the first screen are only laid out and painted when near the viewport. */
+main > .cms-section:not(:first-child) {
+  content-visibility: auto;
+  contain-intrinsic-size: auto 900px;
+}
+.animate-marquee,
+.animate-marquee-reverse {
+  will-change: transform;
+}
+html {
+  scroll-padding-top: 90px;
+}
+img {
+  -webkit-user-drag: none;
 }

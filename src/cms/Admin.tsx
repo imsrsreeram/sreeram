@@ -10,6 +10,7 @@ import {
   fieldTypes,
   presets,
   FONT_OPTIONS,
+  loadFontPreviews,
   fontStack,
   ensureFont,
   themeTokens,
@@ -81,6 +82,10 @@ export default function Admin() {
     [media, setMedia] = useState<any[]>([]),
     [mediaOpen, setMediaOpen] = useState(false),
     [browseFonts, setBrowseFonts] = useState(false),
+    [fontQ, setFontQ] = useState(""),
+    [fontGroup, setFontGroup] = useState("All"),
+    [themeQ, setThemeQ] = useState(""),
+    [themeMode, setThemeMode] = useState("All"),
     [busy, setBusy] = useState(false),
     [showPreview, setShowPreview] = useState(false),
     [snapshot, setSnapshot] = useState(""),
@@ -225,6 +230,13 @@ export default function Admin() {
       setServerSha(published.sha || "");
       setSnapshot(JSON.stringify(draft));
       localStorage.removeItem(BACKUP);
+      try {
+        const ch = new BroadcastChannel("portfolio-cms");
+        ch.postMessage("published");
+        ch.close();
+      } catch {
+        /* older browsers: the site still checks every 30 seconds */
+      }
       setStatus(
         "Published. Visitors see the change within about a minute; the full site rebuild finishes in a few minutes.",
       );
@@ -320,6 +332,13 @@ export default function Admin() {
     a.click();
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   }
+  useEffect(() => {
+    if (browseFonts)
+      loadFontPreviews(
+        FONT_OPTIONS.map((f) => f.name),
+        "Strategy, Analytics, 2027",
+      );
+  }, [browseFonts]);
   if (!token && !demo)
     return (
       <div className="admin-login">
@@ -641,6 +660,32 @@ export default function Admin() {
                       </label>
                     )}
                   </div>
+                  {sec.data && (
+                    <p className="hero-hint own-data-note">
+                      <b>This section has its own separate copy of the content.</b>{" "}
+                      Edits made here do not change the main site content (name,
+                      bio, header, footer), and edits to the main content do not
+                      change this section.{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (
+                            confirm(
+                              "Make this section use the main site content? Its separate copy will be removed.",
+                            )
+                          )
+                            update((d) => {
+                              const t = d.sections.find(
+                                (x: any) => x.id === sec.id,
+                              );
+                              if (t) delete t.data;
+                            });
+                        }}
+                      >
+                        Use main content instead
+                      </button>
+                    </p>
+                  )}
                   <div className="row">
                     <button onClick={() => duplicate(sec)}>
                       Duplicate Section
@@ -839,8 +884,41 @@ export default function Admin() {
             )}
             {tab === "themes" && (
               <>
+                <div className="row theme-filter">
+                  <input
+                    type="search"
+                    placeholder="Search themes…"
+                    value={themeQ}
+                    onChange={(e) => setThemeQ(e.target.value)}
+                  />
+                  {["All", "Light", "Dark"].map((m) => (
+                    <button
+                      type="button"
+                      key={m}
+                      className={themeMode === m ? "on" : ""}
+                      onClick={() => setThemeMode(m)}
+                    >
+                      {m}
+                    </button>
+                  ))}
+                  <span className="hero-hint">
+                    {presets.length + draft.appearance.customThemes.length}{" "}
+                    themes
+                  </span>
+                </div>
                 <div className="theme-grid">
-                  {[...presets, ...draft.appearance.customThemes].map((t) => (
+                  {[...presets, ...draft.appearance.customThemes]
+                    .filter((t) => {
+                      const dark =
+                        contrast(t.colors.background, "#ffffff") >
+                        contrast(t.colors.background, "#000000");
+                      return (
+                        (themeMode === "All" ||
+                          (themeMode === "Dark") === dark) &&
+                        t.name.toLowerCase().includes(themeQ.toLowerCase())
+                      );
+                    })
+                    .map((t) => (
                     <article
                       className={
                         "theme-card " +
@@ -1142,41 +1220,65 @@ export default function Admin() {
                     setBrowseFonts((e.currentTarget as HTMLDetailsElement).open)
                   }
                 >
-                  <summary>Browse all fonts</summary>
+                  <summary>
+                    Browse all {FONT_OPTIONS.length} fonts (search, preview and
+                    apply)
+                  </summary>
+                  <div className="row font-filter">
+                    <input
+                      type="search"
+                      placeholder="Search fonts…"
+                      value={fontQ}
+                      onChange={(e) => setFontQ(e.target.value)}
+                    />
+                    {["All", ...new Set(FONT_OPTIONS.map((f) => f.group))].map(
+                      (g) => (
+                        <button
+                          type="button"
+                          key={g}
+                          className={fontGroup === g ? "on" : ""}
+                          onClick={() => setFontGroup(g)}
+                        >
+                          {g}
+                        </button>
+                      ),
+                    )}
+                  </div>
                   <div className="font-grid">
-                    {(browseFonts ? FONT_OPTIONS : []).map((f) => {
-                      ensureFont(f.name);
-                      return (
-                        <article key={f.name}>
-                          <strong style={{ fontFamily: fontStack(f.name) }}>
-                            {f.name}
-                          </strong>
-                          <span style={{ fontFamily: fontStack(f.name) }}>
-                            Strategy, Analytics, 2027
-                          </span>
-                          <div className="font-apply">
-                            {["heading", "body", "logo"].map((k) => (
-                              <button
-                                type="button"
-                                key={k}
-                                className={
-                                  draft.appearance.fonts[k] === f.name
-                                    ? "on"
-                                    : ""
-                                }
-                                onClick={() =>
-                                  update(
-                                    (d) => (d.appearance.fonts[k] = f.name),
-                                  )
-                                }
-                              >
-                                {pretty(k)}
-                              </button>
-                            ))}
-                          </div>
-                        </article>
-                      );
-                    })}
+                    {(browseFonts
+                      ? FONT_OPTIONS.filter(
+                          (f) =>
+                            (fontGroup === "All" || f.group === fontGroup) &&
+                            f.name.toLowerCase().includes(fontQ.toLowerCase()),
+                        )
+                      : []
+                    ).map((f) => (
+                      <article key={f.name}>
+                        <strong style={{ fontFamily: fontStack(f.name) }}>
+                          {f.name}
+                        </strong>
+                        <span style={{ fontFamily: fontStack(f.name) }}>
+                          Strategy, Analytics, 2027
+                        </span>
+                        <div className="font-apply">
+                          {["heading", "body", "logo"].map((k) => (
+                            <button
+                              type="button"
+                              key={k}
+                              className={
+                                draft.appearance.fonts[k] === f.name ? "on" : ""
+                              }
+                              onClick={() => {
+                                ensureFont(f.name);
+                                update((d) => (d.appearance.fonts[k] = f.name));
+                              }}
+                            >
+                              {pretty(k)}
+                            </button>
+                          ))}
+                        </div>
+                      </article>
+                    ))}
                   </div>
                 </details>
               </>

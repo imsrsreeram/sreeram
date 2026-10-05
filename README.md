@@ -123,4 +123,12 @@ The browser test uses intercepted local build assets and offline demo content; i
 - **Tests no longer depend on your content,** so adding sections in the admin can't make the deployment workflow fail.
 - **Hero:** picture, banner, optional mobile banner, `classic` or `poster` layout, `cutout` shape for transparent PNG/WebP photos.
 - **Uploads** are resized to 2000 px and converted to WebP automatically.
-- **Themes:** 24 presets (light and dark). **Fonts:** about 55 families; Google fonts download only when selected.
+- **Themes:** 53 presets (light and dark), with search and a Light/Dark filter in the Theme Manager. **Fonts:** 172 families (sans, serif, display, script/handwriting, mono, system) with a searchable preview browser; Google fonts download only when selected.
+
+## Update notes (v3)
+
+- **Pictures always show:** the hero picture, banner and generic image fields try the deployed copy first and then the GitHub copy, so a photo you just uploaded appears straight away instead of waiting for the site rebuild (also in Preview).
+- **Edits appear faster:** the site checks for newly published content every 30 seconds, when the tab regains focus, and immediately when the admin publishes in the same browser.
+- **Duplicated sections:** a duplicated section keeps its *own* copy of the content. The admin now says so on that section and offers "Use main content instead".
+- **Smoother scrolling:** off-screen sections are skipped until near the viewport, scroll tracking runs once per frame, the cursor glow no longer uses a large blur filter, and the header blur is lighter.
+- **Fonts:** every font now requests only weights Google actually offers (several earlier choices could silently fail to load), with an automatic retry.

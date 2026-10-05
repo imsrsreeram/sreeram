@@ -70,10 +70,10 @@ export const Header: React.FC<HeaderProps> = ({
 
   return (
     <header
-      className={`fixed top-0 left-0 right-0 w-full z-40 transition-all duration-200 ${
+      className={`fixed top-0 left-0 right-0 w-full z-40 transition-[background-color,box-shadow,padding] duration-200 ${
         isScrolled
-          ? "bg-surface/95 backdrop-blur-xl shadow-[0_2px_12px_rgba(0,0,0,0.06)] py-1"
-          : "bg-surface/85 backdrop-blur-xl shadow-[0_1px_8px_rgba(0,0,0,0.04)] py-0"
+          ? "bg-surface/95 backdrop-blur-sm shadow-[0_2px_12px_rgba(0,0,0,0.06)] py-1"
+          : "bg-surface/85 backdrop-blur-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)] py-0"
       }`}
     >
       <div className="h-20 max-w-[1320px] mx-auto px-4 sm:px-6 lg:px-8 flex items-center justify-between gap-4">

@@ -1,4 +1,5 @@
 import { safeURL, HERO_DEFAULTS } from "../cms/model";
+import { useMedia, useMediaQuery } from "../cms/media";
 import React, { useState, useEffect, useRef } from "react";
 import { usePortfolioData } from "../cms/context";
 
@@ -25,20 +26,21 @@ export const Hero: React.FC<HeroProps> = ({
 }) => {
   const PORTFOLIO_DATA = usePortfolioData();
   const opts = { ...HERO_DEFAULTS, ...(hero || {}) };
-  const photo = safeURL(heroImage);
-  const banner = safeURL(opts.banner);
-  const bannerMobile = safeURL(opts.bannerMobile);
+  const isPhone = useMediaQuery("(max-width: 767px)");
   const overlay = Math.min(90, Math.max(0, Number(opts.bannerOverlay) || 0));
   const overlayLeft = Math.min(92, overlay + 15);
   const showNodeChips = opts.showNodes !== false;
-  const [photoFailed, setPhotoFailed] = useState(false);
-  const [bannerFailed, setBannerFailed] = useState(false);
-  useEffect(() => setPhotoFailed(false), [photo]);
-  useEffect(() => setBannerFailed(false), [banner, bannerMobile]);
-  const hasPhoto = !!photo && !photoFailed;
+  // Picture and banner each try the deployed copy first, then the GitHub copy,
+  // so a just-published upload shows up before the site rebuild finishes.
+  const photoM = useMedia(heroImage);
+  const bannerPath =
+    isPhone && opts.bannerMobile ? opts.bannerMobile : opts.banner || opts.bannerMobile;
+  const bannerM = useMedia(bannerPath);
+  const photo = photoM.src;
+  const hasPhoto = !photoM.failed;
   const poster = hasPhoto && opts.layout === "poster";
   const cutout = opts.imageShape === "cutout";
-  const hasBanner = !!(banner || bannerMobile) && !bannerFailed;
+  const hasBanner = !bannerM.failed;
 
   const [activeNode, setActiveNode] = useState<string | null>(null);
   // The cursor halo follows the pointer without re-rendering React (smooth),
@@ -117,8 +119,12 @@ export const Hero: React.FC<HeroProps> = ({
       >
         <div
           ref={haloRef}
-          className="absolute left-0 top-0 hidden [@media(hover:hover)_and_(pointer:fine)]:block w-[500px] h-[500px] -ml-[250px] -mt-[250px] rounded-full bg-gradient-to-tr from-secondary/15 via-on-tertiary-container/10 to-transparent blur-3xl will-change-transform"
-          style={{ transform: "translate3d(-999px,-999px,0)" }}
+          className="absolute left-0 top-0 hidden [@media(hover:hover)_and_(pointer:fine)]:block w-[500px] h-[500px] -ml-[250px] -mt-[250px] rounded-full will-change-transform"
+          style={{
+            transform: "translate3d(-999px,-999px,0)",
+            background:
+              "radial-gradient(circle, color-mix(in srgb, var(--color-secondary) 16%, transparent) 0%, transparent 68%)",
+          }}
           data-cursor-halo="true"
         />
       </div>
@@ -134,20 +140,15 @@ export const Hero: React.FC<HeroProps> = ({
             className="pointer-events-none absolute inset-0 -z-10"
             data-testid="hero-banner"
           >
-            <picture>
-              {bannerMobile && banner && (
-                <source media="(max-width: 767px)" srcSet={bannerMobile} />
-              )}
-              <img
-                src={banner || bannerMobile}
-                alt={opts.bannerAlt || ""}
-                className="h-full w-full object-cover"
-                style={{ objectPosition: opts.bannerFocus }}
-                decoding="async"
-                fetchPriority="high"
-                onError={() => setBannerFailed(true)}
-              />
-            </picture>
+            <img
+              src={bannerM.src}
+              alt={opts.bannerAlt || ""}
+              className="h-full w-full object-cover"
+              style={{ objectPosition: opts.bannerFocus }}
+              decoding="async"
+              fetchPriority="high"
+              onError={bannerM.onError}
+            />
             {/* Theme-coloured wash keeps the text readable on any photo, light or dark theme */}
             <div
               className={`absolute inset-0 ${poster ? "lg:hidden" : ""}`}
@@ -323,7 +324,7 @@ export const Hero: React.FC<HeroProps> = ({
                     }}
                     decoding="async"
                     fetchPriority="high"
-                    onError={() => setPhotoFailed(true)}
+                    onError={photoM.onError}
                   />
                 </figure>
               )}
@@ -339,7 +340,7 @@ export const Hero: React.FC<HeroProps> = ({
                       className="block w-full max-w-[280px] sm:max-w-[340px] lg:max-w-[440px] max-h-[460px] lg:max-h-[560px] h-auto object-contain drop-shadow-[0_18px_36px_rgba(0,0,0,0.3)]"
                       decoding="async"
                       fetchPriority="high"
-                      onError={() => setPhotoFailed(true)}
+                      onError={photoM.onError}
                     />
                   ) : (
                     <div
@@ -354,7 +355,7 @@ export const Hero: React.FC<HeroProps> = ({
                         style={{ objectPosition: opts.imageFocus }}
                         decoding="async"
                         fetchPriority="high"
-                        onError={() => setPhotoFailed(true)}
+                        onError={photoM.onError}
                       />
                     </div>
                   )}

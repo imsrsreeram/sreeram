@@ -14,6 +14,7 @@ import { ExecutiveContact } from "./components/ExecutiveContact";
 import { Footer } from "./components/Footer";
 import { DataContext } from "./cms/context";
 import { Fields, GenericSection } from "./cms/Fields";
+import { mediaCandidates } from "./cms/media";
 import {
   normalize,
   ordered,
@@ -71,7 +72,7 @@ export default function App() {
       try {
         const r = await fetch(
           rawBase + "content/site-content.json?t=" + Date.now(),
-          { cache: "no-store" },
+          { cache: "reload" },
         );
         if (!r.ok) return;
         const fresh = normalize(await r.json());
@@ -89,12 +90,29 @@ export default function App() {
     const onVisible = () => {
       if (document.visibilityState === "visible") refreshLive();
     };
+    // When the admin publishes in this same browser, check again straight away
+    // (and a few more times, because GitHub can take a few seconds to serve it).
+    const kicks: number[] = [];
+    let channel: BroadcastChannel | null = null;
     function startLive() {
       refreshLive();
       document.addEventListener("visibilitychange", onVisible);
+      window.addEventListener("focus", onVisible);
+      window.addEventListener("online", onVisible);
       liveTimer = window.setInterval(() => {
         if (document.visibilityState === "visible") refreshLive();
-      }, 60000);
+      }, 30000);
+      try {
+        channel = new BroadcastChannel("portfolio-cms");
+        channel.onmessage = (e) => {
+          if (e.data !== "published") return;
+          [800, 4000, 10000, 25000].forEach((ms) =>
+            kicks.push(window.setTimeout(refreshLive, ms)),
+          );
+        };
+      } catch {
+        /* BroadcastChannel unsupported: the 30 second poll still applies */
+      }
     }
     fetch("./content/site-content.json?v=" + Date.now(), { cache: "no-store" })
       .then((r) => {
@@ -133,10 +151,25 @@ export default function App() {
     return () => {
       stopped = true;
       window.clearInterval(liveTimer);
+      kicks.forEach((k) => window.clearTimeout(k));
+      channel?.close();
+      window.removeEventListener("focus", onVisible);
+      window.removeEventListener("online", onVisible);
       document.removeEventListener("visibilitychange", onVisible);
       window.removeEventListener("message", receive);
     };
   }, []);
+  const [resumeUrl, setResumeUrl] = useState("");
+  useEffect(() => {
+    const c = mediaCandidates(content?.resume);
+    setResumeUrl(c[0] || "");
+    if (c.length > 1)
+      fetch(c[0], { method: "HEAD" })
+        .then((r) => {
+          if (!r.ok) setResumeUrl(c[1]);
+        })
+        .catch(() => {});
+  }, [content?.resume]);
   useEffect(() => {
     if (!content) return;
     window.__CMS_CONTENT = content;
@@ -188,25 +221,31 @@ export default function App() {
             observer.unobserve(entry.target);
           }
         }),
-      { threshold: 0.08 },
+      { threshold: 0.05, rootMargin: "0px 0px -4% 0px" },
     );
     document
       .querySelectorAll(".cms-section")
       .forEach((el) => observer.observe(el));
+    const ids = ordered(content)
+      .filter((s) => s.visible)
+      .map((s) => s.id);
+    let raf = 0;
     const onScroll = () => {
-      const s = ordered(content)
-        .filter((s) => s.visible)
-        .reverse()
-        .find(
-          (s) =>
-            (document.getElementById(s.id)?.getBoundingClientRect().top ??
-              Infinity) < 200,
-        );
-      if (s) setActive(s.id);
+      if (raf) return;
+      raf = requestAnimationFrame(() => {
+        raf = 0;
+        let cur = "";
+        for (const id of ids) {
+          const top = document.getElementById(id)?.getBoundingClientRect().top;
+          if (top !== undefined && top < 200) cur = id;
+        }
+        if (cur) setActive(cur);
+      });
     };
     window.addEventListener("scroll", onScroll, { passive: true });
     return () => {
       window.removeEventListener("scroll", onScroll);
+      if (raf) cancelAnimationFrame(raf);
       observer.disconnect();
     };
   }, [content]);
@@ -214,7 +253,7 @@ export default function App() {
   if (!content) return <p className="cms-loading">Loading portfolio…</p>;
   window.__CMS_CONTENT = content;
   const resume = () => {
-    const url = safeURL(content.resume);
+    const url = resumeUrl || safeURL(content.resume);
     if (url) window.open(url, "_blank", "noopener,noreferrer");
     else alert("A resume has not been uploaded yet.");
   };

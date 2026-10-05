@@ -537,3 +537,38 @@ p {
   color: #fff;
   border-color: #2850ce;
 }
+
+/* theme + font browsers */
+.theme-filter,
+.font-filter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: 0 0 14px;
+}
+.theme-filter input[type="search"],
+.font-filter input[type="search"] {
+  flex: 1 1 200px;
+  min-width: 0;
+}
+.theme-filter button,
+.font-filter button {
+  padding: 6px 12px;
+  border-radius: 999px;
+}
+.theme-filter button.on,
+.font-filter button.on {
+  background: #0e1b32;
+  color: #fff;
+}
+.own-data-note {
+  padding: 10px 12px;
+  border: 1px solid #e2b24a;
+  border-radius: 8px;
+  background: #fff8e6;
+  color: #4a3410;
+}
+.own-data-note button {
+  margin-left: 6px;
+}

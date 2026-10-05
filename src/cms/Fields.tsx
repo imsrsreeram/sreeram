@@ -1,5 +1,6 @@
 import React from "react";
 import { safeURL } from "./model";
+import { SmartImg } from "./media";
 function RichText({ value }: { value: string }) {
   const doc = new DOMParser().parseFromString(value || "", "text/html");
   const render = (node: Node, i: number): any => {
@@ -57,7 +58,7 @@ export function Fields({ fields = [] }: { fields?: any[] }) {
               <span className="cms-field-label">{f.label}</span>
             )}
             {["image"].includes(f.type) ? (
-              <img src={safeURL(f.value)} alt={f.label} loading="lazy" />
+              <SmartImg path={f.value} alt={f.label} loading="lazy" decoding="async" />
             ) : ["url", "file", "email", "phone", "button"].includes(f.type) ? (
               <a
                 className={f.type === "button" ? "cms-button" : ""}
@@ -135,9 +136,10 @@ export function GenericSection({ section: s }: { section: any }) {
         {items.map((it: any, i: number) => (
           <article key={i}>
             {it.image && (
-              <img
+              <SmartImg
                 loading="lazy"
-                src={safeURL(it.image)}
+                decoding="async"
+                path={it.image}
                 alt={it.title || it.name || ""}
               />
             )}

@@ -59,96 +59,193 @@ export type FontOption = {
   /** Google Fonts family spec; omitted for system fonts */
   google?: string;
 };
+/** [family, Google weights]. An empty weight string means "single-weight font". */
+type FontDef = [string, string];
+const W4 = "400;500;600;700",
+  W5 = "400;500;600;700;800",
+  W2 = "400;700",
+  W1 = "";
+const mk = (group: FontOption["group"], defs: FontDef[]): FontOption[] =>
+  defs.map(([name, w]) => ({
+    name,
+    group,
+    google: name.replace(/ /g, "+") + (w ? ":wght@" + w : ""),
+  }));
 export const FONT_OPTIONS: FontOption[] = [
-  ...[
-    "Inter",
-    "Manrope",
-    "Poppins",
-    "Montserrat",
-    "DM Sans",
-    "Plus Jakarta Sans",
-    "Outfit",
-    "Sora",
-    "Lexend",
-    "Work Sans",
-    "Nunito",
-    "Raleway",
-    "Open Sans",
-    "Roboto",
-    "Source Sans 3",
-    "IBM Plex Sans",
-    "Space Grotesk",
-    "Urbanist",
-    "Figtree",
-    "Barlow",
-    "Josefin Sans",
-    "Rubik",
-    "Mulish",
-    "Karla",
-  ].map((name) => ({
-    name,
-    group: "Sans-serif" as const,
-    google: name.replace(/ /g, "+") + ":wght@400;500;600;700;800",
-  })),
-  ...[
-    "Playfair Display",
-    "Merriweather",
-    "Lora",
-    "Cormorant Garamond",
-    "DM Serif Display",
-    "Libre Baskerville",
-    "Fraunces",
-    "Crimson Pro",
-    "EB Garamond",
-    "Bitter",
-    "Noto Serif",
-  ].map((name) => ({
-    name,
-    group: "Serif" as const,
-    google: name.replace(/ /g, "+") + ":wght@400;500;600;700",
-  })),
-  ...[
-    "Bebas Neue",
-    "Anton",
-    "Oswald",
-    "Archivo Black",
-    "Abril Fatface",
-    "Big Shoulders Display",
-    "League Spartan",
-    "Syne",
-    "Unbounded",
-  ].map((name) => ({
-    name,
-    group: "Display" as const,
-    google:
-      name.replace(/ /g, "+") +
-      (/Bebas|Anton|Archivo Black|Abril/.test(name)
-        ? ""
-        : ":wght@400;500;600;700"),
-  })),
-  ...[
-    "Great Vibes",
-    "Dancing Script",
-    "Allura",
-    "Pacifico",
-    "Satisfy",
-    "Caveat",
-    "Sacramento",
-    "Mr Dafoe",
-  ].map((name) => ({
-    name,
-    group: "Script" as const,
-    google:
-      name.replace(/ /g, "+") +
-      (/Dancing|Caveat/.test(name) ? ":wght@400;600;700" : ""),
-  })),
-  ...["JetBrains Mono", "Space Mono", "Fira Code", "IBM Plex Mono"].map(
-    (name) => ({
-      name,
-      group: "Monospace" as const,
-      google: name.replace(/ /g, "+") + ":wght@400;500;600",
-    }),
-  ),
+  ...mk("Sans-serif", [
+    ["Inter", W5],
+    ["Manrope", W5],
+    ["Poppins", W5],
+    ["Montserrat", W5],
+    ["DM Sans", W5],
+    ["Plus Jakarta Sans", W5],
+    ["Outfit", W5],
+    ["Sora", W5],
+    ["Lexend", W5],
+    ["Work Sans", W5],
+    ["Nunito", W5],
+    ["Raleway", W5],
+    ["Open Sans", W5],
+    ["Roboto", W4],
+    ["Source Sans 3", W5],
+    ["IBM Plex Sans", W4],
+    ["Space Grotesk", W4],
+    ["Urbanist", W5],
+    ["Figtree", W5],
+    ["Barlow", W5],
+    ["Josefin Sans", W4],
+    ["Rubik", W5],
+    ["Mulish", W5],
+    ["Karla", W5],
+    ["Albert Sans", W5],
+    ["Red Hat Display", W5],
+    ["Epilogue", W5],
+    ["Be Vietnam Pro", W5],
+    ["Onest", W5],
+    ["Instrument Sans", W4],
+    ["Hanken Grotesk", W5],
+    ["Schibsted Grotesk", W5],
+    ["Bricolage Grotesque", W5],
+    ["Gabarito", W5],
+    ["Lato", W2],
+    ["Nunito Sans", W5],
+    ["Quicksand", W4],
+    ["Cabin", W4],
+    ["Exo 2", W5],
+    ["Kanit", W5],
+    ["Prompt", W5],
+    ["Jost", W5],
+    ["Archivo", W5],
+    ["Public Sans", W5],
+    ["Familjen Grotesk", W4],
+    ["Wix Madefor Display", W5],
+  ]),
+  ...mk("Serif", [
+    ["Playfair Display", W5],
+    ["Merriweather", W2],
+    ["Lora", W4],
+    ["Cormorant Garamond", W4],
+    ["DM Serif Display", W1],
+    ["Libre Baskerville", W2],
+    ["Fraunces", W5],
+    ["Crimson Pro", W5],
+    ["EB Garamond", W5],
+    ["Bitter", W5],
+    ["Noto Serif", W5],
+    ["Cormorant", W4],
+    ["Libre Caslon Text", W2],
+    ["Spectral", W5],
+    ["Newsreader", W5],
+    ["Young Serif", W1],
+    ["Gloock", W1],
+    ["Instrument Serif", W1],
+    ["Bodoni Moda", W5],
+    ["Cinzel", W5],
+    ["Marcellus", W1],
+    ["Rufina", W2],
+    ["Prata", W1],
+    ["Italiana", W1],
+    ["Yeseva One", W1],
+    ["Lustria", W1],
+    ["Source Serif 4", W5],
+    ["Playfair Display SC", W2],
+    ["DM Serif Text", W1],
+    ["Abhaya Libre", W5],
+    ["Cormorant Upright", W4],
+    ["Gilda Display", W1],
+  ]),
+  ...mk("Display", [
+    ["Bebas Neue", W1],
+    ["Anton", W1],
+    ["Oswald", W4],
+    ["Archivo Black", W1],
+    ["Abril Fatface", W1],
+    ["Big Shoulders Display", W5],
+    ["League Spartan", W5],
+    ["Syne", W5],
+    ["Unbounded", W5],
+    ["Righteous", W1],
+    ["Bungee", W1],
+    ["Teko", W4],
+    ["Rajdhani", W4],
+    ["Orbitron", W5],
+    ["Audiowide", W1],
+    ["Michroma", W1],
+    ["Russo One", W1],
+    ["Passion One", W2],
+    ["Alfa Slab One", W1],
+    ["Staatliches", W1],
+    ["Fjalla One", W1],
+    ["Rubik Mono One", W1],
+    ["Chakra Petch", W4],
+    ["Lilita One", W1],
+    ["Titan One", W1],
+    ["Poiret One", W1],
+    ["Limelight", W1],
+    ["Monoton", W1],
+    ["Shrikhand", W1],
+    ["Bowlby One", W1],
+    ["Black Ops One", W1],
+    ["Oleo Script", W2],
+    ["Rammetto One", W1],
+    ["Fredericka the Great", W1],
+    ["Gasoek One", W1],
+    ["Climate Crisis", W1],
+  ]),
+  ...mk("Script", [
+    ["Great Vibes", W1],
+    ["Dancing Script", "400;600;700"],
+    ["Allura", W1],
+    ["Pacifico", W1],
+    ["Satisfy", W1],
+    ["Caveat", "400;600;700"],
+    ["Sacramento", W1],
+    ["Mr Dafoe", W1],
+    ["Parisienne", W1],
+    ["Tangerine", W2],
+    ["Playball", W1],
+    ["Kaushan Script", W1],
+    ["Yellowtail", W1],
+    ["Lobster", W1],
+    ["Lobster Two", W2],
+    ["Courgette", W1],
+    ["Cookie", W1],
+    ["Merienda", W4],
+    ["Handlee", W1],
+    ["Shadows Into Light", W1],
+    ["Indie Flower", W1],
+    ["Amatic SC", W2],
+    ["Patrick Hand", W1],
+    ["Marck Script", W1],
+    ["Alex Brush", W1],
+    ["Pinyon Script", W1],
+    ["Rouge Script", W1],
+    ["Homemade Apple", W1],
+    ["Gloria Hallelujah", W1],
+    ["Permanent Marker", W1],
+    ["Birthstone", W1],
+    ["Italianno", W1],
+    ["Niconne", W1],
+    ["Norican", W1],
+    ["Arizonia", W1],
+    ["Rochester", W1],
+    ["Berkshire Swash", W1],
+    ["Petit Formal Script", W1],
+    ["Mea Culpa", W1],
+    ["Ephesis", W1],
+  ]),
+  ...mk("Monospace", [
+    ["JetBrains Mono", "400;500;600"],
+    ["Space Mono", W2],
+    ["Fira Code", "400;500;600"],
+    ["IBM Plex Mono", "400;500;600"],
+    ["Roboto Mono", "400;500;600"],
+    ["Source Code Pro", "400;500;600"],
+    ["DM Mono", "400;500"],
+    ["Inconsolata", "400;500;600"],
+    ["Red Hat Mono", "400;500;600"],
+    ["Martian Mono", "400;500;600"],
+  ]),
   ...[
     "Arial",
     "Verdana",
@@ -192,7 +289,46 @@ export function ensureFont(name: string) {
   l.rel = "stylesheet";
   l.href =
     "https://fonts.googleapis.com/css2?family=" + f.google + "&display=swap";
+  // If Google rejects the weight list for a family, retry with its default weight.
+  l.onerror = () => {
+    if (l.dataset.retry) return;
+    const r = document.createElement("link");
+    r.rel = "stylesheet";
+    r.dataset.retry = "1";
+    r.href =
+      "https://fonts.googleapis.com/css2?family=" +
+      f.google!.split(":")[0] +
+      "&display=swap";
+    document.head.append(r);
+  };
   document.head.append(l);
+}
+/**
+ * Admin-only: loads tiny glyph-subsets of many families at once so the font
+ * browser can preview every font without downloading full font files.
+ */
+export function loadFontPreviews(names: string[], sample: string) {
+  if (typeof document === "undefined") return;
+  const text = encodeURIComponent([...new Set(sample + " Aa")].join(""));
+  const fams = names
+    .map((n) => FONT_OPTIONS.find((x) => x.name === n))
+    .filter((f) => f?.google)
+    .map((f) => "family=" + f!.google!.split(":")[0]);
+  for (let i = 0; i < fams.length; i += 30) {
+    const chunk = fams.slice(i, i + 30);
+    const id = "gfp-" + chunk.join("&").length + "-" + chunk[0];
+    if (document.getElementById(id)) continue;
+    const l = document.createElement("link");
+    l.id = id;
+    l.rel = "stylesheet";
+    l.href =
+      "https://fonts.googleapis.com/css2?" +
+      chunk.join("&") +
+      "&text=" +
+      text +
+      "&display=swap";
+    document.head.append(l);
+  }
 }
 export const themeTokens = [
   "primary",
@@ -459,6 +595,296 @@ export const presets: any[] = [
       "#4e2d63",
       "#c3a8cb",
       "#0c0610",
+    ),
+  },
+  // ---- extra light themes ----
+  {
+    id: "mint-fresh",
+    name: "Mint Fresh",
+    colors: palette("#0f4c3a", "#0b7a56", "#c2410c", "#f1fbf6", "#12302a"),
+  },
+  {
+    id: "peach-blossom",
+    name: "Peach Blossom",
+    colors: palette("#6b2d1f", "#c2410c", "#a16207", "#fff4ed", "#3a1d14"),
+  },
+  {
+    id: "lemon-zest",
+    name: "Lemon Zest",
+    colors: palette("#3f3a0a", "#8a6d00", "#0f766e", "#fffdf0", "#2b2808"),
+  },
+  {
+    id: "arctic-blue",
+    name: "Arctic Blue",
+    colors: palette("#0c3b66", "#0369a1", "#0f766e", "#f0f8ff", "#0d2a44"),
+  },
+  {
+    id: "terracotta-studio",
+    name: "Terracotta Studio",
+    colors: palette("#5a2a1c", "#b4492a", "#3f6b5b", "#fbf3ec", "#33211a"),
+  },
+  {
+    id: "olive-grove",
+    name: "Olive Grove",
+    colors: palette("#34401a", "#617a1f", "#a1531b", "#f7f8ee", "#252d14"),
+  },
+  {
+    id: "cherry-blossom",
+    name: "Cherry Blossom",
+    colors: palette("#6d1b3d", "#c02667", "#7c5cc4", "#fff1f6", "#3d1226"),
+  },
+  {
+    id: "cobalt-pop",
+    name: "Cobalt Pop",
+    colors: palette("#10206b", "#2447e0", "#e0561a", "#f5f7ff", "#121a45"),
+  },
+  {
+    id: "aqua-breeze",
+    name: "Aqua Breeze",
+    colors: palette("#064e5a", "#08788a", "#d9480f", "#effcfd", "#0b3038"),
+  },
+  {
+    id: "mocha-latte",
+    name: "Mocha Latte",
+    colors: palette("#43302b", "#8a5a44", "#2f6f62", "#f8f1ea", "#33241f", "#ffffff", "#101820", { mutedText: "#5b6478" }),
+  },
+  {
+    id: "coral-reef",
+    name: "Coral Reef",
+    colors: palette("#0e3a57", "#c93a26", "#0c8f8f", "#fff6f2", "#12304a"),
+  },
+  {
+    id: "lilac-dream",
+    name: "Lilac Dream",
+    colors: palette("#3b2a6b", "#7e4fd6", "#c0306b", "#f7f3ff", "#261a47"),
+  },
+  {
+    id: "sandstone-gold",
+    name: "Sandstone Gold",
+    colors: palette("#4a3410", "#8a5d06", "#2f5d8a", "#faf5e9", "#33260e"),
+  },
+  {
+    id: "ruby-ivory",
+    name: "Ruby & Ivory",
+    colors: palette("#5c0f1f", "#b3153a", "#8a6a1f", "#fffaf3", "#3a1018"),
+  },
+  {
+    id: "slate-sky",
+    name: "Slate & Sky",
+    colors: palette("#1f2a3a", "#2468b5", "#b45309", "#f4f7fb", "#1a2432"),
+  },
+  {
+    id: "jade-garden",
+    name: "Jade Garden",
+    colors: palette("#0c3d33", "#0a7a60", "#a6430f", "#f0faf6", "#0f2c26"),
+  },
+  // ---- extra dark themes ----
+  {
+    id: "obsidian-emerald",
+    name: "Obsidian Emerald",
+    colors: dk(
+      "#d7fbe8",
+      "#34d399",
+      "#fcd34d",
+      "#070d0b",
+      "#e6f6ee",
+      "#0f1a16",
+      "#15251f",
+      "#244237",
+      "#9bbfae",
+      "#030706",
+    ),
+  },
+  {
+    id: "aurora-violet",
+    name: "Aurora Violet",
+    colors: dk(
+      "#efe6ff",
+      "#a78bfa",
+      "#5eead4",
+      "#0d0a1c",
+      "#eee9fb",
+      "#171230",
+      "#1f1942",
+      "#3b3170",
+      "#b6addb",
+      "#07050f",
+    ),
+  },
+  {
+    id: "deep-ocean",
+    name: "Deep Ocean",
+    colors: dk(
+      "#dff3ff",
+      "#38bdf8",
+      "#fb923c",
+      "#06111c",
+      "#e4f1fb",
+      "#0b1c2c",
+      "#102639",
+      "#1f4262",
+      "#9cbbd3",
+      "#030a12",
+    ),
+  },
+  {
+    id: "ember-glow",
+    name: "Ember Glow",
+    colors: dk(
+      "#fff0e3",
+      "#fb923c",
+      "#fde047",
+      "#120a06",
+      "#f7ece2",
+      "#1e120b",
+      "#2a1910",
+      "#4d3020",
+      "#cdb09b",
+      "#080402",
+    ),
+  },
+  {
+    id: "slate-rose",
+    name: "Slate Rose",
+    colors: dk(
+      "#ffe4ec",
+      "#fb7185",
+      "#fcd34d",
+      "#0f1118",
+      "#f1e9ed",
+      "#181b26",
+      "#212534",
+      "#3b4157",
+      "#b4b8c9",
+      "#080a10",
+    ),
+  },
+  {
+    id: "matrix-green",
+    name: "Matrix Green",
+    colors: dk(
+      "#d8ffe0",
+      "#22c55e",
+      "#a3e635",
+      "#030a05",
+      "#d9f7e0",
+      "#08140b",
+      "#0d1f11",
+      "#17402a",
+      "#88c29a",
+      "#010502",
+    ),
+  },
+  {
+    id: "twilight-teal",
+    name: "Twilight Teal",
+    colors: dk(
+      "#dcfdfa",
+      "#2dd4bf",
+      "#f9a8d4",
+      "#07141a",
+      "#e0f4f5",
+      "#0d212a",
+      "#132e3a",
+      "#22505f",
+      "#95bec5",
+      "#030a0e",
+    ),
+  },
+  {
+    id: "plum-velvet",
+    name: "Plum Velvet",
+    colors: dk(
+      "#fde7f3",
+      "#f472b6",
+      "#fbbf24",
+      "#14091a",
+      "#f5e8f3",
+      "#201128",
+      "#2c1938",
+      "#533068",
+      "#c9a8cf",
+      "#0a040e",
+    ),
+  },
+  {
+    id: "carbon-orange",
+    name: "Carbon Orange",
+    colors: dk(
+      "#ffeedd",
+      "#ff7a1a",
+      "#38bdf8",
+      "#0d0d0f",
+      "#f2f2f3",
+      "#17171b",
+      "#212127",
+      "#3a3a44",
+      "#b0b0ba",
+      "#050506",
+    ),
+  },
+  {
+    id: "nordic-night",
+    name: "Nordic Night",
+    colors: dk(
+      "#e5ecf6",
+      "#88c0d0",
+      "#ebcb8b",
+      "#1b222d",
+      "#e8edf4",
+      "#232c39",
+      "#2b3646",
+      "#46556d",
+      "#a9b6c8",
+      "#10151c",
+    ),
+  },
+  {
+    id: "sapphire-night",
+    name: "Sapphire Night",
+    colors: dk(
+      "#e3ebff",
+      "#6b8cff",
+      "#f0abfc",
+      "#070b1a",
+      "#e8edfd",
+      "#0e1530",
+      "#141d42",
+      "#27356f",
+      "#a2afd8",
+      "#03050d",
+    ),
+  },
+  {
+    id: "onyx-gold",
+    name: "Onyx & Gold",
+    colors: dk(
+      "#f8ecc9",
+      "#d4a73a",
+      "#9ad1c0",
+      "#0a0a0a",
+      "#efeadd",
+      "#151515",
+      "#1e1d1a",
+      "#3a372f",
+      "#b5ae9b",
+      "#040404",
+    ),
+  },
+  {
+    id: "wine-cellar",
+    name: "Wine Cellar",
+    colors: dk(
+      "#ffe6ea",
+      "#e5486b",
+      "#e9c46a",
+      "#150709",
+      "#f6e8ea",
+      "#210d11",
+      "#2e1319",
+      "#552632",
+      "#c8a5ad",
+      "#0a0305",
     ),
   },
 ];

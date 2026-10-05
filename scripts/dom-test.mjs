@@ -41,7 +41,11 @@ globalThis.IntersectionObserver = class {
 };
 window.confirm = globalThis.confirm = () => true;
 window.alert = globalThis.alert = () => {};
-window.SITE_CONFIG = { API_BASE_URL: "" };
+window.SITE_CONFIG = {
+  API_BASE_URL: "",
+  GITHUB_REPO: "owner/repo",
+  GITHUB_BRANCH: "main",
+};
 let content = JSON.parse(fs.readFileSync("content/site-content.json"));
 globalThis.fetch = async () => ({
   ok: true,
@@ -78,6 +82,27 @@ assert.equal(
   document.querySelectorAll("[id]").length,
   "duplicate DOM IDs",
 );
+// Hero picture + banner must render, and a not-yet-deployed upload must fall
+// back to the GitHub copy instead of leaving a broken/empty picture.
+{
+  const photo = document.querySelector('[data-testid="hero-photo"] img');
+  const banner = document.querySelector('[data-testid="hero-banner"] img');
+  assert(photo, "hero picture missing");
+  assert(banner, "hero banner missing");
+  assert(/media\/images\//.test(photo.getAttribute("src")), "hero picture src");
+  await act(async () => {
+    photo.dispatchEvent(new window.Event("error"));
+  });
+  const after = document.querySelector('[data-testid="hero-photo"] img');
+  assert(after, "hero picture vanished after first load error");
+  assert(after !== photo || after.getAttribute("src").startsWith("https://"));
+  assert.equal(
+    after.getAttribute("src"),
+    "https://raw.githubusercontent.com/owner/repo/main/" +
+      content.profileImage.replace(/^\.\//, ""),
+    "hero picture should fall back to the GitHub copy",
+  );
+}
 const draft = structuredClone(content);
 draft.data.profile.name = "CMS Updated Name";
 draft.sections.push({
