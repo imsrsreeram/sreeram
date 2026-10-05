@@ -2183,9 +2183,9 @@
       }
     },
     "fonts": {
-      "heading": "Inter",
-      "body": "Trebuchet MS",
-      "logo": "Trebuchet MS"
+      "heading": "Montserrat",
+      "body": "Verdana",
+      "logo": "Montserrat"
     },
     "animations": {
       "enabled": true,
